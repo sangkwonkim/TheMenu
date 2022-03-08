@@ -36,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
     snsId : {
       type : DataTypes.STRING(30),
       allowNull : true
+    },
+    accessToken: {
+      type : DataTypes.STRING(100),
+      allowNull : true
+    },
+    refreshToken: {
+      type : DataTypes.STRING(100),
+      allowNull : true
     }
   }, {
     sequelize,
