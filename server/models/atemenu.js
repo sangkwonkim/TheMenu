@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Atemenu.belongsTo(models.User, { foreignKey: 'user', targetKey: 'id' });
+      Atemenu.belongsTo(models.Menu, { foreignKey: 'menu', targetKey: 'id' });
     }
   }
   Atemenu.init({
