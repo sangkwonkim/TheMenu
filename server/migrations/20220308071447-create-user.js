@@ -24,17 +24,13 @@ module.exports = {
       social : {
         type : Sequelize.STRING(10),
         allowNull : false,
-        defaultValue : local
+        defaultValue : 'local'
       },
       snsId : {
         type : Sequelize.STRING(30),
         allowNull : true
       },
       createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       },

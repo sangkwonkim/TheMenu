@@ -8,22 +8,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
-        type: Sequelize.STRING
+      name : {
+        type : Sequelize.STRING(30),
+        allowNull : false,
+        unique : true
       },
-      lastName: {
-        type: Sequelize.STRING
+      spicy: { // 안 매우면 0, 매우면 1
+        type : Sequelize.BOOLEAN,
+        allowNull : false,
       },
-      email: {
-        type: Sequelize.STRING
+      meat: { // 고기 없거나 비주류면 0, 고기가 주류면 1
+        type : Sequelize.BOOLEAN,
+        allowNull : false,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+      soup: { // 국물 없으면 0, 국물 있으면 1
+        type : Sequelize.BOOLEAN,
+        allowNull : false,
       },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+      style: { // 한식, 일식, 중식, 양식, 기타(분식 등)
+        type : Sequelize.STRING(10),
+        allowNull : false,
+      },
+      type : { // 밥, 면, 빵, 기타(샐러드)
+        type : Sequelize.STRING(10),
+        allowNull : false,
       }
     });
   },
