@@ -19,8 +19,8 @@ module.exports = {
       if (!same) {
         return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
       }
-      const accessToken = jwt.sign({ nick :userData.nick }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-      const refreshToken = jwt.sign({email : userData.email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+      const accessToken = jwt.sign({ email : userData.email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+      const refreshToken = jwt.sign({ nick :userData.nick, email : userData.email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
       res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
         // sameSite: 'strict',
@@ -32,9 +32,33 @@ module.exports = {
       res.status(500).json({ message: '로그인에 실패했습니다.' });
     }
   },
-  logout: (req, res) => {
-    try {
-    } catch {
+  logout: async (req, res) => {
+      try {
+        const accessToken = req.headers['authorization'].split(' ')[1];
+        const email = jwt.verify(accessToken, process.env.ACCESS_SECRET).email;
+        const userData = await UserModel.update(
+          {
+            accessToken: null,
+            refreshToken: null
+          },
+          { where: { email: email } }
+        );
+        res.clearCookie('refreshToken', {
+          // sameSite: 'strict',
+          // httpOnly: true,
+          // secure: true
+        }).status(200).json({ message: '로그아웃 되었습니다.' });
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return res.clearCookie('refreshToken', {
+          // sameSite: 'strict',
+          // httpOnly: true,
+          // secure: true
+        }).status(200).json({ message: '로그아웃 되었습니다.' });
+      } else if (error.message === `Cannot read properties of undefined (reading 'split')`) {
+        return res.status(401).json({ message : '로그인이 필요합니다.'});
+      }
+      res.status(500).json({ message: '로그아웃에 실패했습니다.' });
     }
   },
   signup: (req, res) => {

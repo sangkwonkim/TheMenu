@@ -71,7 +71,47 @@ describe('POST /user/login', () => {
             res.status.should.equal(400)
             res.body.should.have.property('message', '비밀번호가 틀렸습니다.');
             done();
-        })
+          })
       });
+  });
+});
+
+describe('POST /user/logout', () => {
+  before(() => models.sequelize.sync({ force: true }));
+  const email = 'sangkwon2406@naver.com';
+  const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+  const refreshToken = jwt.sign({ nick: 'sangkwon', email : email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+  before(() => UserModel.queryInterface.bulkInsert('Users', [{
+    email: 'sangkwon2406@naver.com',
+    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+    nick: 'sangkwon',
+    social: 'local',
+    accessToken: null,
+    refreshToken: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }]));
+  describe('성공 시', () => {
+    it('응답 상태 코드는 200을 반환한다.', (done) => {
+      request(app)
+        .post('/user/logout')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(200)
+          res.body.should.have.property('message', '로그아웃 되었습니다.');
+          done();
+        })
+    });
+  });
+  describe('실패 시', () => {
+    it('요청 헤더에 값이 없을 경우에 401을 반환한다.', (done) => {
+      request(app)
+        .post('/user/logout')
+        .end((err, res) => {
+          res.status.should.equal(401)
+          res.body.should.have.property('message', '로그인이 필요합니다.');
+          done();
+        })
+    });
   });
 });
