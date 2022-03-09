@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const controller = require('../controller/menu');
+const verifyToken = require('../middleware/index')
 
-// 전체메뉴 확인
-// 조건 맞춤 메뉴 확인
-// 메뉴 저장
+router.get('/', controller.get);
+router.post('/:user_Id', verifyToken, controller.post);
+router.get('/:user_Id', verifyToken, controller.myMenu);
 
 module.exports = router;

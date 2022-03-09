@@ -30,6 +30,14 @@ module.exports = {
         type : Sequelize.STRING(30),
         allowNull : true
       },
+      accessToken: {
+        type : DataTypes.STRING(100),
+        allowNull : true
+      },
+      refreshToken: {
+        type : DataTypes.STRING(100),
+        allowNull : true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
