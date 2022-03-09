@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     social : {
       type : DataTypes.STRING(10),
       allowNull : false,
-      defaultValue : local
+      defaultValue : 'local'
     },
     snsId : {
       type : DataTypes.STRING(30),

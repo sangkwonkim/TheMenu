@@ -1,8 +1,35 @@
+const { User: UserModel } = require('../models');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 module.exports = {
-  login: (req, res) => {
+  login: async (req, res) => {
     try {
-// 로그인 성공 시 accesstoken을 body로 넘겨주고 이 값을 req.authorization 헤더에 Bearer ${accesstoken}으로 신청한다.
-    } catch {
+      const email = req.body.email;
+      const password = req.body.password;
+      if (!email || !password) return res.status(400).json({ message: '로그인 정보를 정확하게 입력해주세요.' });
+      const userData = await UserModel.findOne({
+        where: {
+          email: email
+        },
+        attributes: { exclude: ['snsId', 'social', 'accessToken', 'refreshToken', 'updatedAt', 'createdAt', 'deletedAt'] }
+      });
+      if (!userData) return res.status(404).json({ message: '회원가입한 유저가 아닙니다.' });
+      const same = bcrypt.compareSync(password, userData.password);
+      if (!same) {
+        return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
+      }
+      const accessToken = jwt.sign({ nick :userData.nick }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+      const refreshToken = jwt.sign({email : userData.email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+      res.cookie('refreshToken', refreshToken, {
+        maxAge: 24 * 60 * 60 * 1000,
+        // sameSite: 'strict',
+        // httpOnly: true,
+        // secure: true
+      }).status(200).json({ accessToken: accessToken, userInfo: userData.nick });
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: '로그인에 실패했습니다.' });
     }
   },
   logout: (req, res) => {

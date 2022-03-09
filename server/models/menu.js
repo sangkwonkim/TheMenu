@@ -21,15 +21,15 @@ module.exports = (sequelize, DataTypes) => {
       unique : true
     },
     spicy: { // 안 매우면 0, 매우면 1
-      type : DataTypes.Boolean,
+      type : DataTypes.BOOLEAN,
       allowNull : false
     },
     meat: { // 고기 없거나 비주류면 0, 고기가 주류면 1
-      type : DataTypes.Boolean,
+      type : DataTypes.BOOLEAN,
       allowNull : false
     },
     soup: { // 국물 없으면 0, 국물 있으면 1
-      type : DataTypes.Boolean,
+      type : DataTypes.BOOLEAN,
       allowNull : false
     },
     style: { // 한식, 일식, 중식, 양식, 기타(분식 등)
