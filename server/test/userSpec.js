@@ -5,6 +5,9 @@ const should = require('should');
 const { User: UserModel } = require('../models');
 const jwt = require('jsonwebtoken');
 
+  // const refreshToken = jwt.sign({ nick: 'sangkwon', email : email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+
+
 describe('POST /user/login', () => {
   before(() => models.sequelize.sync({ force: true }));
   before(() => UserModel.queryInterface.bulkInsert('Users', [{
@@ -80,7 +83,6 @@ describe('POST /user/logout', () => {
   before(() => models.sequelize.sync({ force: true }));
   const email = 'sangkwon2406@naver.com';
   const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-  const refreshToken = jwt.sign({ nick: 'sangkwon', email : email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
   before(() => UserModel.queryInterface.bulkInsert('Users', [{
     email: 'sangkwon2406@naver.com',
     password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
@@ -110,6 +112,94 @@ describe('POST /user/logout', () => {
         .end((err, res) => {
           res.status.should.equal(401)
           res.body.should.have.property('message', '로그인이 필요합니다.');
+          done();
+        })
+    });
+  });
+});
+
+describe('POST /user/logout', () => {
+  before(() => models.sequelize.sync({ force: true }));
+  const email = 'sangkwon2406@naver.com';
+  const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+  before(() => UserModel.queryInterface.bulkInsert('Users', [{
+    email: 'sangkwon2406@naver.com',
+    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+    nick: 'sangkwon',
+    social: 'local',
+    accessToken: null,
+    refreshToken: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }]));
+  describe('성공 시', () => {
+    it('응답 상태 코드는 200을 반환한다.', (done) => {
+      request(app)
+        .post('/user/logout')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(200)
+          res.body.should.have.property('message', '로그아웃 되었습니다.');
+          done();
+        })
+    });
+  });
+  describe('실패 시', () => {
+    it('요청 헤더에 값이 없을 경우에 401을 반환한다.', (done) => {
+      request(app)
+        .post('/user/logout')
+        .end((err, res) => {
+          res.status.should.equal(401)
+          res.body.should.have.property('message', '로그인이 필요합니다.');
+          done();
+        })
+    });
+  });
+});
+
+describe('POST /user/signup', () => {
+  before(() => models.sequelize.sync({ force: true }));
+  describe('성공 시', () => {
+    it('응답 상태 코드는 201을 반환한다.', (done) => {
+      request(app)
+        .post('/user/signup')
+        .send({ userInfo : {
+          email: 'sangkwon2406@naver.com',
+          password: '1234',
+          nick: 'sangkwon',
+        }})
+        .end((err, res) => {
+          res.status.should.equal(201)
+          res.body.should.have.property('message', '회원가입에 성공했습니다.');
+          done();
+        })
+    });
+  });
+  describe('실패 시', () => {
+    it('사용자의 정보가 부족할 경우 400을 반환한다.', (done) => {
+      request(app)
+        .post('/user/signup')
+        .send({ userInfo : {
+          email: 'sangkwon2406@naver.com',
+          nick: 'sangkwon',
+        }})
+        .end((err, res) => {
+          res.status.should.equal(400)
+          res.body.should.have.property('message', '회원가입 정보를 정확하게 입력해주세요.');
+          done();
+        })
+    });
+    it('email이 중복될 경우 400을 반환한다.', (done) => {
+      request(app)
+        .post('/user/signup')
+        .send({ userInfo : {
+          email: 'sangkwon2406@naver.com',
+          password: '1234',
+          nick: 'sangkwon',
+        }})
+        .end((err, res) => {
+          res.status.should.equal(400)
+          res.body.should.have.property('message', '중복된 아이디입니다.');
           done();
         })
     });

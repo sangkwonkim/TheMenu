@@ -61,9 +61,29 @@ module.exports = {
       res.status(500).json({ message: '로그아웃에 실패했습니다.' });
     }
   },
-  signup: (req, res) => {
+  signup: async (req, res) => {
     try {
+      const userInfo = req.body.userInfo;
+      if (!userInfo) return res.status(400).json({ message: '회원가입 정보를 정확하게 입력해주세요.' });
+      const email = userInfo.email;
+      const nick = userInfo.nick;
+      const password = userInfo.password;
+      if (!email || !nick || !password) return res.status(400).json({ message: '회원가입 정보를 정확하게 입력해주세요.' });
+      const encryptedPassowrd = bcrypt.hashSync(password, 12);
+      const duplication = await UserModel.findOrCreate({
+        where: {
+          email: email
+        },
+        defaults: {
+          email: email,
+          nick: nick,
+          password: encryptedPassowrd
+        }
+      });
+      if (!duplication[1]) return res.status(400).json({ message: '중복된 아이디입니다.' });
+      res.status(201).json({ message: '회원가입에 성공했습니다.'})
     } catch {
+      res.status(500).json({ message: '회원가입에 실패했습니다.' });
     }
   },
   delete: (req, res) => {
