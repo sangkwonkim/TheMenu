@@ -5,9 +5,6 @@ const should = require('should');
 const { User: UserModel } = require('../models');
 const jwt = require('jsonwebtoken');
 
-  // const refreshToken = jwt.sign({ nick: 'sangkwon', email : email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
-
-
 describe('POST /user/login', () => {
   before(() => models.sequelize.sync({ force: true }));
   before(() => UserModel.queryInterface.bulkInsert('Users', [{
@@ -145,7 +142,7 @@ describe('POST /user/logout', () => {
     });
   });
   describe('실패 시', () => {
-    it('요청 헤더에 값이 없을 경우에 401을 반환한다.', (done) => {
+    it('요청 authorization 헤더에 accessToken이 없다면 401을 반환한다.', (done) => {
       request(app)
         .post('/user/logout')
         .end((err, res) => {
@@ -179,7 +176,7 @@ describe('POST /user/signup', () => {
     it('사용자의 정보가 부족할 경우 400을 반환한다.', (done) => {
       request(app)
         .post('/user/signup')
-        .send({ userInfo : {
+        .send({ userthis : {
           email: 'sangkwon2406@naver.com',
           nick: 'sangkwon',
         }})
@@ -205,3 +202,86 @@ describe('POST /user/signup', () => {
     });
   });
 });
+
+describe('DELETE /user/:user_Id', () => {
+  before(() => models.sequelize.sync({ force: true }));
+  const email = 'sangkwon2406@naver.com';
+  const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+  before(() => UserModel.queryInterface.bulkInsert('Users', [{
+    email: 'sangkwon2406@naver.com',
+    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+    nick: 'sangkwon',
+    social: 'local',
+    accessToken: null,
+    refreshToken: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }]));
+  describe('성공 시', () => {
+    it('응답 상태 코드는 200을 반환한다.', (done) => {
+      request(app)
+        .delete('/user/1')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(200)
+          res.body.should.have.property('message', '회원탈퇴 되었습니다.');
+          done();
+        })
+    });
+  });
+  describe('실패 시', () => {
+    it('이미 탈퇴한 유저의 탈퇴 요청이 올 경우 404를 반환한다.', (done) => {
+      request(app)
+        .delete('/user/1')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(404)
+          res.body.should.have.property('message', '사용자 정보를 찾을 수 없습니다.');
+          done();
+        })
+    });
+    const email2 = 'test@naver.com';
+    const accessToken2 = jwt.sign({ email : email2 }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+    before(() => UserModel.queryInterface.bulkInsert('Users', [{
+      email: 'test@naver.com',
+      password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+      nick: 'test',
+      social: 'local',
+      accessToken: null,
+      refreshToken: null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }]));
+    it('id가 숫자가 아닐 경우 400을 응답한다', (done) => {
+      request(app)
+        .delete('/user/one')
+        .set('authorization', `Bearer ${accessToken2}`)
+        .end((err, res) => {
+          res.status.should.equal(400)
+          res.body.should.have.property('message', '요청이 잘 못 되었습니다.');
+          done();
+        })
+    });
+    it('요청 authorization 헤더에 accessToken이 없다면 401을 반환한다.', (done) => {
+      request(app)
+        .delete('/user/1')
+        .end((err, res) => {
+          res.status.should.equal(401)
+          res.body.should.have.property('message', '로그인이 필요합니다.');
+          done();
+        })
+    });
+    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
+      request(app)
+        .delete('/user/1')
+        .set('authorization', `Bearer ${accessToken2}`)
+        .end((err, res) => {
+          res.status.should.equal(403)
+          res.body.should.have.property('message', '본인만 탈퇴를 요청할 수 있습니다.');
+          done();
+        })
+    });
+  });
+});
+
+  // const refreshToken = jwt.sign({ nick: 'sangkwon', email : email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });

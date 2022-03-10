@@ -1,4 +1,4 @@
-const { User: UserModel } = require('../models');
+const { User: UserModel, Atemenu : AtemenuModel } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -86,9 +86,25 @@ module.exports = {
       res.status(500).json({ message: '회원가입에 실패했습니다.' });
     }
   },
-  delete: (req, res) => {
+  delete: async (req, res) => {
     try {
+      const user_Id = parseInt(req.params.user_Id, 10);
+      if (Number.isNaN(user_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
+      const findUser = await UserModel.findOne({
+        where: { email: req.decoded.email },
+        attributes: [ 'id' ] 
+      });
+      if (!findUser) return res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });
+      if (user_Id !== findUser.id) return res.status(403).json({ message: '본인만 탈퇴를 요청할 수 있습니다.' });
+      const deleteAtemenu = await AtemenuModel.destroy({ where: { user: findUser.id } });
+      const deleteUser = await UserModel.destroy({ where: { id: findUser.id } });
+      res.clearCookie('refreshToken', {
+        // sameSite: 'strict',
+        // httpOnly: true,
+        // secure: true
+      }).status(200).json({ message: '회원탈퇴 되었습니다.' });
     } catch {
+      res.status(500).json({ message: '회원탈퇴에 실패했습니다.' });
     }
   },
   get: (req, res) => {
