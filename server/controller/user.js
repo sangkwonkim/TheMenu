@@ -26,7 +26,7 @@ module.exports = {
         // sameSite: 'strict',
         // httpOnly: true,
         // secure: true
-      }).status(200).json({ accessToken: accessToken, userInfo: userData.nick });
+      }).status(200).json({ accessToken: accessToken, userInfo: { id : userData.id, nick : userData.nick} });
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: '로그인에 실패했습니다.' });
@@ -107,9 +107,19 @@ module.exports = {
       res.status(500).json({ message: '회원탈퇴에 실패했습니다.' });
     }
   },
-  get: (req, res) => {
+  get: async (req, res) => {
     try {
+      const user_Id = parseInt(req.params.user_Id, 10);
+      if (Number.isNaN(user_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
+      const findUser = await UserModel.findOne({
+        where: { email: req.decoded.email },
+        attributes: { exclude: ['password', 'updatedAt', 'createdAt', 'deletedAt', 'accessToken', 'refreshToken'] }
+      });
+      if (!findUser) return res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });
+      if (user_Id !== findUser.id) return res.status(403).json({ message: '본인만 회원 정보를 조회할 수 있습니다.' });
+      res.status(200).json({ userInfo : findUser})
     } catch {
+      res.status(500).json({ message: '회원 조회에 실패했습니다.' });
     }
   },
   patch: (req, res) => {

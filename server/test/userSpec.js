@@ -5,16 +5,32 @@ const should = require('should');
 const { User: UserModel } = require('../models');
 const jwt = require('jsonwebtoken');
 
+const email = 'sangkwon2406@naver.com';
+const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+const email2 = 'test@naver.com';
+const accessToken2 = jwt.sign({ email : email2 }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+const refreshToken = jwt.sign({ nick: 'sangkwon', email : email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+const signupInfo = [{
+  email: email,
+  password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+  nick: 'sangkwon',
+  social: 'local',
+  createdAt: new Date(),
+  updatedAt: new Date()
+}, {
+  email: email2,
+  password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+  nick: 'test',
+  social: 'local',
+  accessToken: null,
+  refreshToken: null,
+  createdAt: new Date(),
+  updatedAt: new Date()
+}];
+
 describe('POST /user/login', () => {
   before(() => models.sequelize.sync({ force: true }));
-  before(() => UserModel.queryInterface.bulkInsert('Users', [{
-    email: 'sangkwon2406@naver.com',
-    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
-    nick: 'sangkwon',
-    social: 'local',
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }]));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
   describe('성공 시', () => {
     it('응답 상태 코드는 200을 반환한다.', (done) => {
       request(app)
@@ -22,13 +38,13 @@ describe('POST /user/login', () => {
         .send({ email: 'sangkwon2406@naver.com', password: '1234' })
         .expect(200, done);
     });
-    it('응답에 accessToken과 유저의 닉네임을 반환한다.', (done) => {
+    it('응답에 accessToken과 유저의 닉네임, id를 반환한다.', (done) => {
       request(app)
         .post('/user/login')
         .send({ email: 'sangkwon2406@naver.com', password: '1234' })
         .end((err, res) => {
           res.body.should.have.property('accessToken');
-          res.body.should.have.property('userInfo', 'sangkwon');
+          res.body.userInfo.should.have.properties({nick : 'sangkwon', id : 1});
           done();
         });
     });
@@ -46,7 +62,7 @@ describe('POST /user/login', () => {
     it('회원가입을 하지 않은 유저일 경우 404를 전송한다.', (done) => {
       request(app)
         .post('/user/login')
-        .send({ email: 'test@naver.com', password: '1234' })
+        .send({ email: 'test1234@naver.com', password: '1234' })
         .end((err, res) => {
             res.status.should.equal(404)
             res.body.should.have.property('message', '회원가입한 유저가 아닙니다.');
@@ -78,18 +94,7 @@ describe('POST /user/login', () => {
 
 describe('POST /user/logout', () => {
   before(() => models.sequelize.sync({ force: true }));
-  const email = 'sangkwon2406@naver.com';
-  const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-  before(() => UserModel.queryInterface.bulkInsert('Users', [{
-    email: 'sangkwon2406@naver.com',
-    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
-    nick: 'sangkwon',
-    social: 'local',
-    accessToken: null,
-    refreshToken: null,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }]));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
   describe('성공 시', () => {
     it('응답 상태 코드는 200을 반환한다.', (done) => {
       request(app)
@@ -117,18 +122,7 @@ describe('POST /user/logout', () => {
 
 describe('POST /user/logout', () => {
   before(() => models.sequelize.sync({ force: true }));
-  const email = 'sangkwon2406@naver.com';
-  const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-  before(() => UserModel.queryInterface.bulkInsert('Users', [{
-    email: 'sangkwon2406@naver.com',
-    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
-    nick: 'sangkwon',
-    social: 'local',
-    accessToken: null,
-    refreshToken: null,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }]));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
   describe('성공 시', () => {
     it('응답 상태 코드는 200을 반환한다.', (done) => {
       request(app)
@@ -205,18 +199,7 @@ describe('POST /user/signup', () => {
 
 describe('DELETE /user/:user_Id', () => {
   before(() => models.sequelize.sync({ force: true }));
-  const email = 'sangkwon2406@naver.com';
-  const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-  before(() => UserModel.queryInterface.bulkInsert('Users', [{
-    email: 'sangkwon2406@naver.com',
-    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
-    nick: 'sangkwon',
-    social: 'local',
-    accessToken: null,
-    refreshToken: null,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }]));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
   describe('성공 시', () => {
     it('응답 상태 코드는 200을 반환한다.', (done) => {
       request(app)
@@ -240,18 +223,6 @@ describe('DELETE /user/:user_Id', () => {
           done();
         })
     });
-    const email2 = 'test@naver.com';
-    const accessToken2 = jwt.sign({ email : email2 }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-    before(() => UserModel.queryInterface.bulkInsert('Users', [{
-      email: 'test@naver.com',
-      password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
-      nick: 'test',
-      social: 'local',
-      accessToken: null,
-      refreshToken: null,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }]));
     it('id가 숫자가 아닐 경우 400을 응답한다', (done) => {
       request(app)
         .delete('/user/one')
@@ -284,4 +255,45 @@ describe('DELETE /user/:user_Id', () => {
   });
 });
 
-  // const refreshToken = jwt.sign({ nick: 'sangkwon', email : email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+describe('GET /user/:user_Id', () => {
+  before(() => models.sequelize.sync({ force: true }));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
+  describe('성공 시', () => {
+    it('응답 상태 코드는 200을 반환한다.', (done) => {
+      request(app)
+        .get('/user/1')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(200)
+          res.body.should.have.property('userInfo');
+          res.body.userInfo.should.have.properties({email : 'sangkwon2406@naver.com', nick : 'sangkwon', social : 'local'});
+          done();
+        })
+    });
+  });
+  describe('실패 시', () => {
+    it('id가 숫자가 아닐 경우 400을 응답한다', (done) => {
+      request(app)
+        .get('/user/one')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(400)
+          res.body.should.have.property('message', '요청이 잘 못 되었습니다.');
+          done();
+        })
+    });
+    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
+      request(app)
+        .get('/user/2')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(403)
+          res.body.should.have.property('message', '본인만 회원 정보를 조회할 수 있습니다.');
+          done();
+        })
+    });
+  });
+});
+
+
+
