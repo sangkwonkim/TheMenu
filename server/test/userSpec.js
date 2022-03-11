@@ -282,6 +282,15 @@ describe('GET /user/:user_Id', () => {
           done();
         })
     });
+    it('요청 authorization 헤더에 accessToken이 없다면 401을 반환한다.', (done) => {
+      request(app)
+      .get('/user/1')
+        .end((err, res) => {
+          res.status.should.equal(401)
+          res.body.should.have.property('message', '로그인이 필요합니다.');
+          done();
+        })
+    });
     it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
       request(app)
         .get('/user/2')
@@ -340,6 +349,15 @@ describe('PATCH /user/:user_Id', () => {
         .end((err, res) => {
           res.status.should.equal(400)
           res.body.should.have.property('message', '수정할 정보를 정확하게 입력해주세요.');
+          done();
+        })
+    });
+    it('요청 authorization 헤더에 accessToken이 없다면 401을 반환한다.', (done) => {
+      request(app)
+      .patch('/user/1')
+        .end((err, res) => {
+          res.status.should.equal(401)
+          res.body.should.have.property('message', '로그인이 필요합니다.');
           done();
         })
     });

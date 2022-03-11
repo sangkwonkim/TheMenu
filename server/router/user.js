@@ -8,6 +8,6 @@ router.post('/signup', controller.signup);
 router.delete('/:user_Id', verifyToken, controller.delete);
 router.get('/:user_Id', verifyToken, controller.get);
 router.patch('/:user_Id', verifyToken, controller.patch);
-// router.post('/accesstoken/:user_Id', controller.accesstokenRequest);
+router.post('/accesstoken/:user_Id', controller.accesstokenRequest);
 
 module.exports = router;

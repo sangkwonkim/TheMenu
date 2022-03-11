@@ -8,25 +8,32 @@ module.exports = {
       const email = req.body.email;
       const password = req.body.password;
       if (!email || !password) return res.status(400).json({ message: '로그인 정보를 정확하게 입력해주세요.' });
-      const userData = await UserModel.findOne({
+      const findUser = await UserModel.findOne({
         where: {
           email: email
         },
         attributes: { exclude: ['snsId', 'social', 'accessToken', 'refreshToken', 'updatedAt', 'createdAt', 'deletedAt'] }
       });
-      if (!userData) return res.status(404).json({ message: '회원가입한 유저가 아닙니다.' });
-      const same = bcrypt.compareSync(password, userData.password);
+      if (!findUser) return res.status(404).json({ message: '회원가입한 유저가 아닙니다.' });
+      const same = bcrypt.compareSync(password, findUser.password);
       if (!same) {
         return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
       }
-      const accessToken = jwt.sign({ email : userData.email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-      const refreshToken = jwt.sign({ nick :userData.nick, email : userData.email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+      const accessToken = jwt.sign({ email : findUser.email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+      const refreshToken = jwt.sign({ nick :findUser.nick, email : findUser.email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
+      const updateUser = await UserModel.update(
+        {
+          accessToken: accessToken,
+          refreshToken: refreshToken
+        },
+        { where: { id: findUser.id } }
+      );
       res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
         // sameSite: 'strict',
         // httpOnly: true,
         // secure: true
-      }).status(200).json({ accessToken: accessToken, userInfo: { id : userData.id, nick : userData.nick} });
+      }).status(200).json({ accessToken: accessToken, userInfo: { id : findUser.id, nick : findUser.nick} });
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: '로그인에 실패했습니다.' });
@@ -36,7 +43,7 @@ module.exports = {
       try {
         const accessToken = req.headers['authorization'].split(' ')[1];
         const email = jwt.verify(accessToken, process.env.ACCESS_SECRET).email;
-        const userData = await UserModel.update(
+        const updateUser = await UserModel.update(
           {
             accessToken: null,
             refreshToken: null
@@ -140,12 +147,59 @@ module.exports = {
       res.status(500).json({ message: '회원정보 수정에 실패했습니다.' });
     }
   },
-  accesstokenRequest: (req, res) => {
+  accesstokenRequest: async (req, res) => {
+    const user_Id = parseInt(req.params.user_Id, 10);
     try {
-// refreshtoken을 db에 저장하고, accesstoken 요청이 들어오면, cookie에 있는 refreshtoken값이랑 db값 비교해서 accesstoken 재발급
-// accesstoken이 만료가 안되었는데 요청이 들어올 경우, refreshtoken이 유효하더라도 둘 다 파기시키고 redirect
-// refreshtoken이 만료되었다면, 재로그인 요청 cookie없애고 db 데이터 삭제
-    } catch {
+      if (Number.isNaN(user_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
+      let refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) return res.status(401).json({ message: '로그인 유저가 아닙니다.' });
+      refreshToken = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+      
+      const findUser = await UserModel.findOne({
+        where: refreshToken,
+        attributes: { exclude: ['password', 'updatedAt', 'createdAt', 'deletedAt'] }
+      });
+      
+      if (user_Id !== findUser.id) return res.status(403).json({ message: '본인만 요청할 수 있습니다.' });
+      
+      jwt.verify(findUser.accessToken, process.env.ACCESS_SECRET, async (error, user) => {
+        if (error) {
+          const accessToken = jwt.sign({ email : userData.email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+          res.status(200).json({ accessToken: accessToken, userInfo: { id : userData.id, nick : userData.nick} });
+        } else {
+          // accesstoken이 만료가 안되었는데 요청이 들어올 경우, refreshtoken이 유효하더라도 둘 다 파기시키고 redirect
+          const updateUser = await UserModel.update(
+            {
+              accessToken: null,
+              refreshToken: null
+            },
+            { where: { id: user_Id } }
+            );
+            return res.clearCookie('refreshToken', {
+              // sameSite: 'strict',
+              // httpOnly: true,
+              // secure: true
+            }).status(403).redirect('/')
+          }
+        })
+      } catch {
+      // refreshtoken이 만료되었다면, 재로그인 요청 cookie없애고 db 데이터 삭제
+      if (error.name === 'TokenExpiredError') {
+        const updateUser = await UserModel.update(
+          {
+            accessToken: null,
+            refreshToken: null
+          },
+          { where: { id: user_Id } }
+        );
+        return res.clearCookie('refreshToken', {
+          // sameSite: 'strict',
+          // httpOnly: true,
+          // secure: true
+        }).status(403).json({ message: '로그아웃 되었습니다.' });
+      } else {
+        res.status(500).json({ message: 'AccessToken 재발급에 실패했습니다.' });
+      }
     }
   }
 };
