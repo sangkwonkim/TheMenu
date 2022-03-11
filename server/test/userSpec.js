@@ -295,5 +295,65 @@ describe('GET /user/:user_Id', () => {
   });
 });
 
-
+describe('PATCH /user/:user_Id', () => {
+  before(() => models.sequelize.sync({ force: true }));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
+  describe('성공 시', () => {
+    it('응답 상태 코드는 200을 반환한다.', (done) => {
+      request(app)
+        .patch('/user/1')
+        .set('authorization', `Bearer ${accessToken}`)
+        .send({ userInfo : { nick : 'kim', password : '4567' }})
+        .end((err, res) => {
+          res.status.should.equal(200)
+          res.body.should.have.property('message', '회원 정보 수정에 성공했습니다.');
+          done();
+        })
+    });
+    it('nick이나 password 둘 중 하나만 있어도 회원 정보가 수정된다.', (done) => {
+      request(app)
+        .patch('/user/1')
+        .set('authorization', `Bearer ${accessToken}`)
+        .send({ userInfo : { nick : 'sangkwon' }})
+        .end((err, res) => {
+          res.status.should.equal(200)
+          res.body.should.have.property('message', '회원 정보 수정에 성공했습니다.');
+          done();
+        })
+    });
+  });
+  describe('실패 시', () => {
+    it('id가 숫자가 아닐 경우 400을 응답한다', (done) => {
+      request(app)
+        .patch('/user/one')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(400)
+          res.body.should.have.property('message', '요청이 잘 못 되었습니다.');
+          done();
+        })
+    });
+    it('요청에 수정할 회원 정보가 없을 경우 400을 반환한다.', (done) => {
+      request(app)
+        .patch('/user/1')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(400)
+          res.body.should.have.property('message', '수정할 정보를 정확하게 입력해주세요.');
+          done();
+        })
+    });
+    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
+      request(app)
+        .patch('/user/2')
+        .set('authorization', `Bearer ${accessToken}`)
+        .send({ userInfo : { nick : 'sangkwon' }})
+        .end((err, res) => {
+          res.status.should.equal(403)
+          res.body.should.have.property('message', '본인만 회원정보를 수정할 수 있습니다.');
+          done();
+        })
+    });
+  });
+});
 

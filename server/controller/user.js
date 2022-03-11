@@ -122,9 +122,22 @@ module.exports = {
       res.status(500).json({ message: '회원 조회에 실패했습니다.' });
     }
   },
-  patch: (req, res) => {
+  patch: async (req, res) => {
     try {
+      // local 사용자의 경우 password, nick 변경이 가능하고
+      // social 사용자의 경우 nick만 변경 가능하다.
+      const user_Id = parseInt(req.params.user_Id, 10);
+      if (Number.isNaN(user_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
+      const userInfo = req.body.userInfo;
+      if (!userInfo) return res.status(400).json({ message: '수정할 정보를 정확하게 입력해주세요.' });
+      if (userInfo.password) userInfo.password = bcrypt.hashSync(userInfo.password, 12);
+      const findUser = await UserModel.findOne({where: { email : req.decoded.email }});
+      if (user_Id !== findUser.id) return res.status(403).json({ message: '본인만 회원정보를 수정할 수 있습니다.' });
+      const updateUser = await UserModel.update(
+        userInfo, { where: { id: user_Id } });
+      res.status(200).json({ message: '회원 정보 수정에 성공했습니다.' });
     } catch {
+      res.status(500).json({ message: '회원정보 수정에 실패했습니다.' });
     }
   },
   accesstokenRequest: (req, res) => {
