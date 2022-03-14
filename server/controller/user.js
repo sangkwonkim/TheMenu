@@ -149,8 +149,8 @@ module.exports = {
   },
   accesstokenRequest: async (req, res) => {
     const user_Id = parseInt(req.params.user_Id, 10);
+    if (Number.isNaN(user_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
     try {
-      if (Number.isNaN(user_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
       let refreshToken = req.cookies.refreshToken;
       if (!refreshToken) return res.status(401).json({ message: '로그인 유저가 아닙니다.' });
       refreshToken = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
@@ -164,8 +164,14 @@ module.exports = {
       
       jwt.verify(findUser.accessToken, process.env.ACCESS_SECRET, async (error, user) => {
         if (error) {
-          const accessToken = jwt.sign({ email : userData.email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-          res.status(200).json({ accessToken: accessToken, userInfo: { id : userData.id, nick : userData.nick} });
+          const accessToken = jwt.sign({ email : findUser.email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+          const updateUser = await UserModel.update(
+            {
+              accessToken: accessToken,
+            },
+            { where: { id: user_Id } }
+            );
+          res.status(200).json({ accessToken: accessToken, userInfo: { id : findUser.id, nick : findUser.nick} });
         } else {
           // accesstoken이 만료가 안되었는데 요청이 들어올 경우, refreshtoken이 유효하더라도 둘 다 파기시키고 redirect
           const updateUser = await UserModel.update(
