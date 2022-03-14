@@ -1,4 +1,4 @@
-const { User: UserModel, Atemenu : AtemenuModel } = require('../models');
+const { User: UserModel, AteMenu : AteMenuModel } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -34,8 +34,7 @@ module.exports = {
         // httpOnly: true,
         // secure: true
       }).status(200).json({ accessToken: accessToken, userInfo: { id : findUser.id, nick : findUser.nick} });
-    } catch (error) {
-      console.log(error)
+    } catch {
       res.status(500).json({ message: '로그인에 실패했습니다.' });
     }
   },
@@ -103,7 +102,7 @@ module.exports = {
       });
       if (!findUser) return res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });
       if (user_Id !== findUser.id) return res.status(403).json({ message: '본인만 탈퇴를 요청할 수 있습니다.' });
-      const deleteAtemenu = await AtemenuModel.destroy({ where: { user: findUser.id } });
+      const deleteAtemenu = await AteMenuModel.destroy({ where: { user: findUser.id } });
       const deleteUser = await UserModel.destroy({ where: { id: findUser.id } });
       res.clearCookie('refreshToken', {
         // sameSite: 'strict',

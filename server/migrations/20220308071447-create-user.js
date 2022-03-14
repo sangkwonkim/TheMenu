@@ -31,11 +31,11 @@ module.exports = {
         allowNull : true
       },
       accessToken: {
-        type : DataTypes.STRING(300),
+        type : Sequelize.STRING(300),
         allowNull : true
       },
       refreshToken: {
-        type : DataTypes.STRING(300),
+        type : Sequelize.STRING(300),
         allowNull : true
       },
       createdAt: {

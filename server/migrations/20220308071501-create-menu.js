@@ -25,11 +25,11 @@ module.exports = {
         type : Sequelize.BOOLEAN,
         allowNull : false,
       },
-      style: { // 한식, 일식, 중식, 양식, 기타(분식 등)
+      style: { // korean, japanese, chinese, western, others(분식 등)
         type : Sequelize.STRING(10),
         allowNull : false,
       },
-      type : { // 밥, 면, 빵, 기타(샐러드)
+      type : { // rice, noodle, bread, others(샐러드)
         type : Sequelize.STRING(10),
         allowNull : false,
       }
