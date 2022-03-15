@@ -223,7 +223,7 @@ describe('DELETE /user/:user_Id', () => {
           done();
         })
     });
-    it('id가 숫자가 아닐 경우 400을 응답한다', (done) => {
+    it('user_Id가 숫자가 아닐 경우 400을 응답한다', (done) => {
       request(app)
         .delete('/user/one')
         .set('authorization', `Bearer ${accessToken2}`)
@@ -242,7 +242,7 @@ describe('DELETE /user/:user_Id', () => {
           done();
         })
     });
-    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
+    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 user_Id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
       request(app)
         .delete('/user/1')
         .set('authorization', `Bearer ${accessToken2}`)
@@ -272,7 +272,7 @@ describe('GET /user/:user_Id', () => {
     });
   });
   describe('실패 시', () => {
-    it('id가 숫자가 아닐 경우 400을 응답한다', (done) => {
+    it('user_Id가 숫자가 아닐 경우 400을 응답한다', (done) => {
       request(app)
         .get('/user/one')
         .set('authorization', `Bearer ${accessToken}`)
@@ -291,7 +291,7 @@ describe('GET /user/:user_Id', () => {
           done();
         })
     });
-    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
+    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 user_Id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
       request(app)
         .get('/user/2')
         .set('authorization', `Bearer ${accessToken}`)
@@ -332,7 +332,7 @@ describe('PATCH /user/:user_Id', () => {
     });
   });
   describe('실패 시', () => {
-    it('id가 숫자가 아닐 경우 400을 응답한다', (done) => {
+    it('user_Id가 숫자가 아닐 경우 400을 응답한다', (done) => {
       request(app)
         .patch('/user/one')
         .set('authorization', `Bearer ${accessToken}`)
@@ -361,7 +361,7 @@ describe('PATCH /user/:user_Id', () => {
           done();
         })
     });
-    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
+    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 user_Id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
       request(app)
         .patch('/user/2')
         .set('authorization', `Bearer ${accessToken}`)

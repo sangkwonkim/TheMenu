@@ -28,11 +28,26 @@ module.exports = {
             res.status(500).json({ message: '메뉴 찾기에 실패했습니다.' });
         }
     },
-    post: (req, res) => {
+    post: async (req, res) => {
         try {
-            // 메뉴 저장
+            const user_Id = parseInt(req.params.user_Id, 10);
+            if (Number.isNaN(user_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
+            const menu_Id = parseInt(req.query.menu_Id, 10);
+            if (Number.isNaN(menu_Id)) return res.status(400).json({ message: '요청이 잘 못 되었습니다.' });
+            const findUser = await UserModel.findOne({
+                where: { email: req.decoded.email },
+                attributes: [ 'id' ] 
+            });
+            if (!findUser) return res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });
+            if (user_Id !== findUser.id) return res.status(403).json({ message: '본인만 메뉴를 저장할 수 있습니다.' });
+            const createAteMenu = await AteMenuModel.create({
+                user : findUser.id,
+                menu : menu_Id,
+                createdAt : new Date()
+            });
+            res.status(201).json({message : '메뉴 저장에 성공했습니다.'})
         } catch {
-            
+            res.status(500).json({ message: '메뉴 저장에 실패했습니다.' });
         }
     },
     myMenu: (req, res) => {
