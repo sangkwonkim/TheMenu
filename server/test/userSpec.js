@@ -120,34 +120,6 @@ describe('POST /user/logout', () => {
   });
 });
 
-describe('POST /user/logout', () => {
-  before(() => models.sequelize.sync({ force: true }));
-  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
-  describe('성공 시', () => {
-    it('응답 상태 코드는 200을 반환한다.', (done) => {
-      request(app)
-        .post('/user/logout')
-        .set('authorization', `Bearer ${accessToken}`)
-        .end((err, res) => {
-          res.status.should.equal(200)
-          res.body.should.have.property('message', '로그아웃 되었습니다.');
-          done();
-        })
-    });
-  });
-  describe('실패 시', () => {
-    it('요청 authorization 헤더에 accessToken이 없다면 401을 반환한다.', (done) => {
-      request(app)
-        .post('/user/logout')
-        .end((err, res) => {
-          res.status.should.equal(401)
-          res.body.should.have.property('message', '로그인이 필요합니다.');
-          done();
-        })
-    });
-  });
-});
-
 describe('POST /user/signup', () => {
   before(() => models.sequelize.sync({ force: true }));
   describe('성공 시', () => {

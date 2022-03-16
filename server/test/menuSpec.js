@@ -41,8 +41,33 @@ const menuList = [{
     style: 'chinese',
     type : 'noodle'
 }];
+
+const userMenu = [{
+  user : 1,
+  menu : 1,
+  createdAt: new Date()
+}, {
+  user : 1,
+  menu : 3,
+  createdAt: new Date()
+}, {
+  user : 1,
+  menu : 5,
+  createdAt: new Date()
+}, {
+  user : 2,
+  menu : 2,
+  createdAt: new Date()
+}, {
+  user : 2,
+  menu : 4,
+  createdAt: new Date()
+}];
+
 const email = 'sangkwon2406@naver.com';
+const email2 = 'test@naver.com';
 const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+const accessToken2 = jwt.sign({ email : email2 }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
 const signupInfo = [{
   email: email,
   password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
@@ -60,7 +85,6 @@ const signupInfo = [{
   createdAt: new Date(),
   updatedAt: new Date()
 }];
-
 
 
 describe('GET /menu', () => {
@@ -183,7 +207,7 @@ describe('GET /menu', () => {
 describe('POST /menu/:user_Id', () => {
   before(() => models.sequelize.sync({ force: true }));
   before(() => MenuModel.queryInterface.bulkInsert('Menus', menuList));
-  before(() => MenuModel.queryInterface.bulkInsert('Users', signupInfo));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
   describe('성공 시', () => {
     it('요청 쿼리에 맞는 음식을 리턴한다.', (done) => {
       request(app)
@@ -233,6 +257,71 @@ describe('POST /menu/:user_Id', () => {
         .end((err, res) => {
           res.status.should.equal(403)
           res.body.should.have.property('message', '본인만 메뉴를 저장할 수 있습니다.');
+          done();
+        })
+    });
+  });
+});
+
+describe('GET /menu/:user_Id', () => {
+  before(() => models.sequelize.sync({ force: true }));
+  before(() => MenuModel.queryInterface.bulkInsert('Menus', menuList));
+  before(() => UserModel.queryInterface.bulkInsert('Users', signupInfo));
+  before(() => AteMenuModel.queryInterface.bulkInsert('AteMenus', userMenu));
+  describe('성공 시', () => {
+    it('1.사용자가 저장한 음식을 리턴한다.', (done) => {
+      request(app)
+        .get('/menu/1')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(200);
+          res.body.should.have.property('menus');
+          res.body.menus[0].should.have.property('name', '김치찌개');
+          res.body.menus[1].should.have.property('name', '초밥');
+          res.body.menus[2].should.have.property('name', '짬뽕');
+          done();
+        });
+    });
+    it('2.사용자가 저장한 음식을 리턴한다.', (done) => {
+      request(app)
+        .get('/menu/2')
+        .set('authorization', `Bearer ${accessToken2}`)
+        .end((err, res) => {
+          res.status.should.equal(200);
+          res.body.should.have.property('menus');
+          res.body.menus[0].should.have.property('name', '된장찌개');
+          res.body.menus[1].should.have.property('name', '짜장면');
+          done();
+        });
+    });
+  });
+  describe('실패 시', () => {
+    it('user_Id가 숫자가 아닐 경우 400을 응답한다', (done) => {
+      request(app)
+        .get('/menu/one')
+        .set('authorization', `Bearer ${accessToken}`)
+        .end((err, res) => {
+          res.status.should.equal(400);
+          res.body.should.have.property('message', '요청이 잘 못 되었습니다.');
+          done();
+        });
+    });
+    it('요청 authorization 헤더에 accessToken이 없다면 401을 반환한다.', (done) => {
+      request(app)
+        .get('/menu/1')
+        .end((err, res) => {
+          res.status.should.equal(401)
+          res.body.should.have.property('message', '로그인이 필요합니다.');
+          done();
+        });
+    });
+    it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 user_Id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
+      request(app)
+        .get('/menu/1')
+        .set('authorization', `Bearer ${accessToken2}`)
+        .end((err, res) => {
+          res.status.should.equal(403)
+          res.body.should.have.property('message', '본인만 메뉴를 확인할 수 있습니다.');
           done();
         })
     });
