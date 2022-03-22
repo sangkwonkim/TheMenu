@@ -1,6 +1,6 @@
 'use strict';
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up (queryInterface, Sequelize) {
     await queryInterface.createTable('AteMenus', {
       id: {
         allowNull: false,
@@ -9,12 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user: {
-        type : Sequelize.INTEGER,
-        allowNull : false,
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       menu: {
-        type : Sequelize.INTEGER,
-        allowNull : false
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -22,7 +22,7 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     await queryInterface.dropTable('AteMenus');
   }
 };

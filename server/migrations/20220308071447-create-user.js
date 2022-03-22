@@ -1,6 +1,6 @@
 'use strict';
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up (queryInterface, Sequelize) {
     await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
@@ -8,35 +8,35 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      email: { 
+      email: {
         type: Sequelize.STRING(40),
-        allowNull : false,
-        unique : true
+        allowNull: false,
+        unique: true
       },
       nick: {
-        type : Sequelize.STRING(15),
-        allowNull : false,
+        type: Sequelize.STRING(15),
+        allowNull: false
       },
       password: {
-        type : Sequelize.STRING(100),
-        allowNull : true
+        type: Sequelize.STRING(100),
+        allowNull: true
       },
-      social : {
-        type : Sequelize.STRING(10),
-        allowNull : false,
-        defaultValue : 'local'
+      social: {
+        type: Sequelize.STRING(10),
+        allowNull: false,
+        defaultValue: 'local'
       },
-      snsId : {
-        type : Sequelize.STRING(30),
-        allowNull : true
+      snsId: {
+        type: Sequelize.STRING(30),
+        allowNull: true
       },
       accessToken: {
-        type : Sequelize.STRING(300),
-        allowNull : true
+        type: Sequelize.STRING(300),
+        allowNull: true
       },
       refreshToken: {
-        type : Sequelize.STRING(300),
-        allowNull : true
+        type: Sequelize.STRING(300),
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
@@ -52,7 +52,7 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
   }
 };

@@ -2,72 +2,72 @@ const app = require('../app');
 const request = require('supertest');
 const models = require('../models');
 const should = require('should');
-const { User: UserModel, AteMenu : AteMenuModel, Menu: MenuModel } = require('../models');
+const { User: UserModel, AteMenu: AteMenuModel, Menu: MenuModel } = require('../models');
 const jwt = require('jsonwebtoken');
 
 const menuList = [{
-    name : '김치찌개',
-    spicy: true,
-    meat: true,
-    soup: true,
-    style: 'korean',
-    type : 'rice'
+  name: '김치찌개',
+  spicy: true,
+  meat: true,
+  soup: true,
+  style: 'korean',
+  type: 'rice'
 }, {
-    name : '된장찌개',
-    spicy: false,
-    meat: false,
-    soup: true,
-    style: 'korean',
-    type : 'rice'
+  name: '된장찌개',
+  spicy: false,
+  meat: false,
+  soup: true,
+  style: 'korean',
+  type: 'rice'
 }, {
-    name : '초밥',
-    spicy: false,
-    meat: false,
-    soup: false,
-    style: 'japanese',
-    type : 'rice'
+  name: '초밥',
+  spicy: false,
+  meat: false,
+  soup: false,
+  style: 'japanese',
+  type: 'rice'
 }, {
-    name : '짜장면',
-    spicy: false,
-    meat: false,
-    soup: false,
-    style: 'chinese',
-    type : 'noodle'
+  name: '짜장면',
+  spicy: false,
+  meat: false,
+  soup: false,
+  style: 'chinese',
+  type: 'noodle'
 }, {
-    name : '짬뽕',
-    spicy: true,
-    meat: false,
-    soup: true,
-    style: 'chinese',
-    type : 'noodle'
+  name: '짬뽕',
+  spicy: true,
+  meat: false,
+  soup: true,
+  style: 'chinese',
+  type: 'noodle'
 }];
 
 const userMenu = [{
-  user : 1,
-  menu : 1,
+  user: 1,
+  menu: 1,
   createdAt: new Date()
 }, {
-  user : 1,
-  menu : 3,
+  user: 1,
+  menu: 3,
   createdAt: new Date()
 }, {
-  user : 1,
-  menu : 5,
+  user: 1,
+  menu: 5,
   createdAt: new Date()
 }, {
-  user : 2,
-  menu : 2,
+  user: 2,
+  menu: 2,
   createdAt: new Date()
 }, {
-  user : 2,
-  menu : 4,
+  user: 2,
+  menu: 4,
   createdAt: new Date()
 }];
 
 const email = 'sangkwon2406@naver.com';
 const email2 = 'test@naver.com';
-const accessToken = jwt.sign({ email : email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-const accessToken2 = jwt.sign({ email : email2 }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+const accessToken = jwt.sign({ email: email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+const accessToken2 = jwt.sign({ email: email2 }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
 const signupInfo = [{
   email: email,
   password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
@@ -86,7 +86,6 @@ const signupInfo = [{
   updatedAt: new Date()
 }];
 
-
 describe('GET /menu', () => {
   before(() => models.sequelize.sync({ force: true }));
   before(() => MenuModel.queryInterface.bulkInsert('Menus', menuList));
@@ -95,10 +94,10 @@ describe('GET /menu', () => {
       request(app)
         .get('/menu?spicy=1&meat=1&soup=1&style=korean&type=rice')
         .end((err, res) => {
-            res.status.should.equal(200);
-            res.body.should.have.property('menus');
-            res.body.menus[0].should.have.property('name', '김치찌개');
-            done();
+          res.status.should.equal(200);
+          res.body.should.have.property('menus');
+          res.body.menus[0].should.have.property('name', '김치찌개');
+          done();
         });
     });
     it('2. 요청 쿼리에 맞는 음식을 리턴한다.', (done) => {
@@ -113,36 +112,36 @@ describe('GET /menu', () => {
     });
     it('3. 요청 쿼리에 맞는 음식을 리턴한다.', (done) => {
       request(app)
-      .get('/menu?spicy=0&meat=0&style=japanese')
-      .end((err, res) => {
-            res.status.should.equal(200);
-            res.body.should.have.property('menus');
-            res.body.menus[0].should.have.property('name', '초밥');
-            done();
+        .get('/menu?spicy=0&meat=0&style=japanese')
+        .end((err, res) => {
+          res.status.should.equal(200);
+          res.body.should.have.property('menus');
+          res.body.menus[0].should.have.property('name', '초밥');
+          done();
         });
     });
     it('4. 요청 쿼리에 맞는 음식을 리턴한다.', (done) => {
       request(app)
-      .get('/menu?style=chinese')
-      .end((err, res) => {
-            res.status.should.equal(200);
-            res.body.should.have.property('menus');
-            res.body.menus[0].should.have.property('name', '짜장면');
-            res.body.menus[1].should.have.property('name', '짬뽕');
-            done();
+        .get('/menu?style=chinese')
+        .end((err, res) => {
+          res.status.should.equal(200);
+          res.body.should.have.property('menus');
+          res.body.menus[0].should.have.property('name', '짜장면');
+          res.body.menus[1].should.have.property('name', '짬뽕');
+          done();
         });
     });
     it('5. 요청 쿼리가 없을 경우 모든 메뉴를 리턴한다.', (done) => {
       request(app)
-      .get('/menu')
-      .end((err, res) => {
-        res.status.should.equal(200);
-        res.body.should.have.property('menus');
-        res.body.menus[0].should.have.property('name', '김치찌개');
-        res.body.menus[2].should.have.property('name', '초밥');
-        res.body.menus[4].should.have.property('name', '짬뽕');
-        done();
-      });
+        .get('/menu')
+        .end((err, res) => {
+          res.status.should.equal(200);
+          res.body.should.have.property('menus');
+          res.body.menus[0].should.have.property('name', '김치찌개');
+          res.body.menus[2].should.have.property('name', '초밥');
+          res.body.menus[4].should.have.property('name', '짬뽕');
+          done();
+        });
     });
   });
   describe('실패 시', () => {
@@ -150,55 +149,55 @@ describe('GET /menu', () => {
       request(app)
         .get('/menu?spicy=one')
         .end((err, res) => {
-            res.status.should.equal(400);
-            res.body.should.have.property('message', 'spicy 요청이 잘 못 되었습니다.');
-            done();
+          res.status.should.equal(400);
+          res.body.should.have.property('message', 'spicy 요청이 잘 못 되었습니다.');
+          done();
         });
     });
     it('쿼리의 meat가 숫자가 아닐 경우 400을 리턴한다.', (done) => {
       request(app)
         .get('/menu?meat=two')
         .end((err, res) => {
-            res.status.should.equal(400);
-            res.body.should.have.property('message', 'meat 요청이 잘 못 되었습니다.');
-            done();
+          res.status.should.equal(400);
+          res.body.should.have.property('message', 'meat 요청이 잘 못 되었습니다.');
+          done();
         });
     });
     it('쿼리의 soup가 숫자가 아닐 경우 400을 리턴한다.', (done) => {
       request(app)
         .get('/menu?soup=three')
         .end((err, res) => {
-            res.status.should.equal(400);
-            res.body.should.have.property('message', 'soup 요청이 잘 못 되었습니다.');
-            done();
+          res.status.should.equal(400);
+          res.body.should.have.property('message', 'soup 요청이 잘 못 되었습니다.');
+          done();
         });
     });
     it('쿼리의 style이 존재하지 않을 경우 400을 리턴한다.', (done) => {
       request(app)
         .get('/menu?style=italian')
         .end((err, res) => {
-            res.status.should.equal(400);
-            res.body.should.have.property('message', 'style 요청이 잘 못 되었습니다.');
+          res.status.should.equal(400);
+          res.body.should.have.property('message', 'style 요청이 잘 못 되었습니다.');
 
-            done();
+          done();
         });
     });
     it('쿼리의 type이 존재하지 않을 경우 400을 리턴한다.', (done) => {
       request(app)
         .get('/menu?type=juice')
         .end((err, res) => {
-            res.status.should.equal(400);
-            res.body.should.have.property('message', 'type 요청이 잘 못 되었습니다.');
-            done();
+          res.status.should.equal(400);
+          res.body.should.have.property('message', 'type 요청이 잘 못 되었습니다.');
+          done();
         });
     });
     it('요청에 맞는 메뉴가 없을 경우 404를 리턴한다.', (done) => {
       request(app)
         .get('/menu?spicy=1&meat=1&soup=1&style=japanese&type=bread')
         .end((err, res) => {
-            res.status.should.equal(404);
-            res.body.should.have.property('message', '조건에 충족하는 메뉴가 존재하지 않습니다.');
-            done();
+          res.status.should.equal(404);
+          res.body.should.have.property('message', '조건에 충족하는 메뉴가 존재하지 않습니다.');
+          done();
         });
     });
   });
@@ -236,29 +235,29 @@ describe('POST /menu/:user_Id', () => {
         .post('/menu/one?menu_Id=1')
         .set('authorization', `Bearer ${accessToken}`)
         .end((err, res) => {
-          res.status.should.equal(400)
+          res.status.should.equal(400);
           res.body.should.have.property('message', '요청이 잘 못 되었습니다.');
           done();
-        })
+        });
     });
     it('요청 authorization 헤더에 accessToken이 없다면 401을 반환한다.', (done) => {
       request(app)
         .post('/menu/1?menu_Id=1')
         .end((err, res) => {
-          res.status.should.equal(401)
+          res.status.should.equal(401);
           res.body.should.have.property('message', '로그인이 필요합니다.');
           done();
-        })
+        });
     });
     it('요청 authorization 헤더에 accessToken에 담긴 정보와 요청 params의 user_Id를 가진 사용자가 다를 경우 403을 반환한다.', (done) => {
       request(app)
         .post('/menu/2?menu_Id=1')
         .set('authorization', `Bearer ${accessToken}`)
         .end((err, res) => {
-          res.status.should.equal(403)
+          res.status.should.equal(403);
           res.body.should.have.property('message', '본인만 메뉴를 저장할 수 있습니다.');
           done();
-        })
+        });
     });
   });
 });
@@ -310,7 +309,7 @@ describe('GET /menu/:user_Id', () => {
       request(app)
         .get('/menu/1')
         .end((err, res) => {
-          res.status.should.equal(401)
+          res.status.should.equal(401);
           res.body.should.have.property('message', '로그인이 필요합니다.');
           done();
         });
@@ -320,10 +319,10 @@ describe('GET /menu/:user_Id', () => {
         .get('/menu/1')
         .set('authorization', `Bearer ${accessToken2}`)
         .end((err, res) => {
-          res.status.should.equal(403)
+          res.status.should.equal(403);
           res.body.should.have.property('message', '본인만 메뉴를 확인할 수 있습니다.');
           done();
-        })
+        });
     });
   });
 });

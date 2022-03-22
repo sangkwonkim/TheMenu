@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate (models) {
       // define association here
       AteMenu.belongsTo(models.User, { foreignKey: 'user', targetKey: 'id' });
       AteMenu.belongsTo(models.Menu, { foreignKey: 'menu', targetKey: 'id' });
@@ -17,12 +17,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   AteMenu.init({
     user: {
-      type : DataTypes.INTEGER,
-      allowNull : false,
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     menu: {
-      type : DataTypes.INTEGER,
-      allowNull : false
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -30,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    timestamps : false,
-    modelName: 'AteMenu',
+    timestamps: false,
+    modelName: 'AteMenu'
   });
   return AteMenu;
 };
