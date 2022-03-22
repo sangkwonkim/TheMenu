@@ -1,27 +1,25 @@
 import React from 'react';
-// import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Main from './components/Main/Main'
+import { Route, Routes } from 'react-router-dom';
+import { WholeContainer } from './AppStyle.js';
+import LoginPage from './pages/LoginPage';
+import IntroPage from './pages/IntroPage';
+import MapPage from './pages/MapPage';
+import MyPage from './pages/MyPage';
+import QuestionPage from './pages/QuestionPage';
+import SignupPage from './pages/SignupPage';
 
-function App() {
+function App () {
   return (
-    <Router>
-      <Main />
+    <WholeContainer>
       <Routes>
-        <Route exact path='/'>
-        </Route>
-        <Route path='/question'>
-        </Route>
-        <Route path='/login'>
-        </Route>
-        <Route path='/signup'>
-        </Route>
-        <Route path='/myPage'>
-        </Route>
-        <Route path='/map'>
-        </Route>
+        <Route exact path='/' element={<IntroPage />} />
+        <Route path='/question' element={<QuestionPage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/signup' element={<SignupPage />} />
+        <Route path='/myPage' element={<MyPage />} />
+        <Route path='/map' element={<MapPage />} />
       </Routes>
-    </Router>
+    </WholeContainer>
   );
 }
 
