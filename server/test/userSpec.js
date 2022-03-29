@@ -15,6 +15,8 @@ const signupInfo = [{
   password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
   nick: 'sangkwon',
   social: 'local',
+  accessToken: null,
+  refreshToken: null,
   createdAt: new Date(),
   updatedAt: new Date()
 }, {

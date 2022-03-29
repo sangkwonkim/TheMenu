@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 module.exports = {
   login: async (req, res) => {
     try {
+      console.log(req.body)
       const email = req.body.email;
       const password = req.body.password;
       if (!email || !password) return res.status(400).json({ message: '로그인 정보를 정확하게 입력해주세요.' });
