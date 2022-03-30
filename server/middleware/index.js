@@ -4,7 +4,7 @@ exports.verifyToken = (req, res, next) => {
   try {
     const accessToken = req.headers.authorization.split(' ')[1];
     req.decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET);
-    return next();
+    next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
       return res.status(419).json({ message: '엑세스 토큰이 만료되었습니다. 엑세스 토큰 재발급 요청이 필요합니다.' });
