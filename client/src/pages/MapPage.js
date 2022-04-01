@@ -6,4 +6,4 @@ export default function MapPage () {
       <div>이건 지도 화면</div>
     </>
   );
-};
+}

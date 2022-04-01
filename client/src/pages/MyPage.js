@@ -6,4 +6,4 @@ export default function MyPage () {
       <div>이건 회원 화면</div>
     </>
   );
-};
+}

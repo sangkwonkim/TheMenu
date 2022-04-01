@@ -34,31 +34,31 @@ export default function SignupPage () {
     axios({
       method: 'POST',
       url: 'http://localhost:4000/user/signup',
-      data : { userInfo : signupInfo }
+      data: { userInfo: signupInfo }
     })
-    .then((result) => {
-      console.log(result.data);
-      navigate('/login')
-    })
-    .catch((error) => {
-      console.log(error.message);
-    })
-  }
+      .then((result) => {
+        console.log(result.data);
+        navigate('/login');
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
   return (
     <>
-      <div >
+      <div>
         <label>이메일</label>
-        <input type='email' onChange={handleInputEmail}></input>
+        <input type='email' onChange={handleInputEmail} />
         <br />
         <label>비밀번호</label>
-        <input type='password' onChange={handleInputPW}></input>
+        <input type='password' onChange={handleInputPW} />
         <br />
         <label>비밀번호 확인</label>
-        <input type='password' onChange={handleInputPW}></input>
+        <input type='password' onChange={handleInputPW} />
         <br />
         <label>별명</label>
-        <input type='name' onChange={handleInputNick}></input>
+        <input type='name' onChange={handleInputNick} />
         <br />
         <button onClick={handleSignup}>
           회원가입
@@ -67,9 +67,9 @@ export default function SignupPage () {
           카카오 로그인
         </button>
         <button>
-          <Link to='/login' >로그인 화면으로 가기</Link>
+          <Link to='/login'>로그인 화면으로 가기</Link>
         </button>
       </div>
     </>
   );
-};
+}

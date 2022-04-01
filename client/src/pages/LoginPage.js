@@ -25,39 +25,39 @@ export default function LoginPage () {
       method: 'POST',
       url: 'http://localhost:4000/user/login',
       // withCredentials: true,
-      data : loginInfo
+      data: loginInfo
     })
-    .then((result) => {
-      console.log(result.data);
-      navigate('/question')
-    })
-    .catch((error) => {
-      console.log(error.message);
-    })
-  }
+      .then((result) => {
+        console.log(result.data);
+        navigate('/question');
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
   return (
     <>
-      <div >
+      <div>
         <label>이메일</label>
-        <input type='email' onChange={handleInputEmail} ></input>
+        <input type='email' onChange={handleInputEmail} />
         <label>비밀번호</label>
-        <input type='password' onChange={handleInputPW} ></input>
+        <input type='password' onChange={handleInputPW} />
         <br />
         <button onClick={handleLogin}>
-            로그인
+          로그인
         </button>
         <button>
           카카오 로그인
         </button>
         <br />
         <button>
-          <Link to='/signup' >회원가입</Link>
+          <Link to='/signup'>회원가입</Link>
         </button>
         <button>
-          <Link to='/' >홈으로 가기</Link>
+          <Link to='/'>홈으로 가기</Link>
         </button>
       </div>
     </>
   );
-};
+}
