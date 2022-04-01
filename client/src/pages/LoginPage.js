@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function LoginPage () {
   const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
-  const handleInputId = (e) => {
+  const handleInputEmail = (e) => {
     setLoginInfo({
       email: e.target.value,
       password: loginInfo.password
@@ -28,6 +29,7 @@ export default function LoginPage () {
     })
     .then((result) => {
       console.log(result.data);
+      navigate('/question')
     })
     .catch((error) => {
       console.log(error.message);
@@ -37,13 +39,13 @@ export default function LoginPage () {
   return (
     <>
       <div >
-        <label>Email</label>
-        <input type='email' onChange={handleInputId} ></input>
-        <label>Password</label>
+        <label>이메일</label>
+        <input type='email' onChange={handleInputEmail} ></input>
+        <label>비밀번호</label>
         <input type='password' onChange={handleInputPW} ></input>
         <br />
         <button onClick={handleLogin}>
-            Login
+            로그인
         </button>
         <button>
           카카오 로그인

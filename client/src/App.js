@@ -12,7 +12,7 @@ function App () {
   return (
     <WholeContainer>
       <Routes>
-        <Route exact path='/' element={<IntroPage />} />
+        <Route path='/' element={<IntroPage />} />
         <Route path='/question' element={<QuestionPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />

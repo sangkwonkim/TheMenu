@@ -1,21 +1,67 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function SignupPage () {
+  const [signupInfo, setSignupInfo] = useState({ email: '', password: '', nick: '' });
+  const navigate = useNavigate();
+
+  const handleInputEmail = (e) => {
+    setSignupInfo({
+      email: e.target.value,
+      password: signupInfo.password,
+      nick: signupInfo.nick
+    });
+  };
+
+  const handleInputPW = (e) => {
+    setSignupInfo({
+      email: signupInfo.email,
+      password: e.target.value,
+      nick: signupInfo.nick
+    });
+  };
+
+  const handleInputNick = (e) => {
+    setSignupInfo({
+      email: signupInfo.email,
+      password: signupInfo.password,
+      nick: e.target.value
+    });
+  };
+
+  const handleSignup = () => {
+    axios({
+      method: 'POST',
+      url: 'http://localhost:4000/user/signup',
+      data : { userInfo : signupInfo }
+    })
+    .then((result) => {
+      console.log(result.data);
+      navigate('/login')
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
+  }
+
   return (
     <>
       <div >
-        <label>Email</label>
-        <input type='email' ></input>
+        <label>이메일</label>
+        <input type='email' onChange={handleInputEmail}></input>
         <br />
-        <label>Password</label>
-        <input type='password' ></input>
+        <label>비밀번호</label>
+        <input type='password' onChange={handleInputPW}></input>
         <br />
-        <label>NickName</label>
-        <input type='name' ></input>
+        <label>비밀번호 확인</label>
+        <input type='password' onChange={handleInputPW}></input>
         <br />
-        <button>
-          Login
+        <label>별명</label>
+        <input type='name' onChange={handleInputNick}></input>
+        <br />
+        <button onClick={handleSignup}>
+          회원가입
         </button>
         <button>
           카카오 로그인
