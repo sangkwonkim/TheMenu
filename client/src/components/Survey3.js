@@ -1,15 +1,15 @@
 import React from 'react';
 
-export default function QuestionPage () {
+export default function Survey3 ({ setMeat }) {
   return (
     <>
       <div>
-        <div>1. 매운 메뉴가 끌리시나요?</div>
+        <div>3. 고기가 있는 메뉴가 끌리시나요?</div>
         <br />
-        <button>
+        <button onClick={() => setMeat(1)}>
           네
         </button>
-        <button>
+        <button onClick={() => setMeat(0)}>
           아니요
         </button>
         <br />
