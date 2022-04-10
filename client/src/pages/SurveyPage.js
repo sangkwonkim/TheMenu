@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Survey1 from '../components/Survey1';
 import Survey2 from '../components/Survey2';
 import Survey3 from '../components/Survey3';
@@ -16,6 +17,7 @@ export default function QuestionPage () {
   const [ soup, setSoup ] = useState();
   const [ type, setType ] = useState();
   const [ style, setStyle ] = useState();
+  const navigate = useNavigate();
 
   const requestSurveyResult = () => {
     const result = {spicy, meat, soup, type, style};
@@ -29,7 +31,7 @@ export default function QuestionPage () {
       }
     }
     query = query.slice(0, query.length - 1);
-    console.log(query)
+    navigate('/result');
   }  
 
   if ( spicy === undefined ) {

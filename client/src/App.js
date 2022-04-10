@@ -7,6 +7,7 @@ import MapPage from './pages/MapPage';
 import MyPage from './pages/MyPage';
 import SurveyPage from './pages/SurveyPage';
 import SignupPage from './pages/SignupPage';
+import ResultPage from './pages/ResultPage.js';
 
 function App () {
   const [userInfo, setUserInfo] = useState({email : '', nickName : ''})
@@ -19,6 +20,7 @@ function App () {
         <Route path='/login' element={<LoginPage setUserInfo={setUserInfo} />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/myPage' element={<MyPage userInfo={userInfo} setUserInfo={setUserInfo} />} />
+        <Route path='/result' element={<ResultPage userInfo={userInfo} />} />
         <Route path='/map' element={<MapPage userInfo={userInfo} />} />
       </Routes>
     </WholeContainer>
