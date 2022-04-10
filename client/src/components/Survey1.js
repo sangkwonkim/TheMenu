@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Survey1 ({ setSpicy }) {
+export default function Survey1 ({ setSpicy, requestSurveyResult }) {
 
   return (
     <>
@@ -14,7 +14,7 @@ export default function Survey1 ({ setSpicy }) {
           아니요
         </button>
         <br />
-        <button>
+        <button onClick={() => requestSurveyResult()}>
           지금까지 결과로 메뉴랑 식당 찾기
         </button>
       </div>

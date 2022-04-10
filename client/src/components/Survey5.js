@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Survey5 ({ setType }) {
+export default function Survey5 ({ setType, requestSurveyResult }) {
   return (
     <>
       <div>
@@ -19,7 +19,7 @@ export default function Survey5 ({ setType }) {
           기타(샐러드 등)
         </button>
         <br />
-        <button>
+        <button onClick={() => requestSurveyResult()}>
           지금까지 결과로 메뉴랑 식당 찾기
         </button>
       </div>
