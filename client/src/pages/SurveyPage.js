@@ -5,6 +5,7 @@ import Survey2 from '../components/Survey2';
 import Survey3 from '../components/Survey3';
 import Survey4 from '../components/Survey4';
 import Survey5 from '../components/Survey5';
+import axios from 'axios';
 
 export default function QuestionPage () {
   // 각 질문 페이지에서 받은 결과를 모은다
@@ -31,7 +32,13 @@ export default function QuestionPage () {
       }
     }
     query = query.slice(0, query.length - 1);
-    navigate('/result');
+    // axios({
+    //   method: 'GET',
+    //   url: `http://localhost:4000/menu?${query}`
+    // })
+    // .then((result) => {
+      navigate('/result', { state : query });
+    // })
   }  
 
   if ( spicy === undefined ) {

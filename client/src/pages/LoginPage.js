@@ -27,17 +27,17 @@ export default function LoginPage ({ userInfo, setUserInfo }) {
       // withCredentials: true,
       data: loginInfo
     })
-      .then((result) => {
-        console.log(result.data);
-        setUserInfo({
-          email : result.data.email,
-          nickName : result.data.nick
-        })
-        navigate('/question');
+    .then((result) => {
+      console.log(result.data);
+      setUserInfo({
+        email : result.data.email,
+        nickName : result.data.nick
       })
-      .catch((error) => {
-        console.log(error.message);
-      });
+      navigate('/question');
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
   };
 
   return (

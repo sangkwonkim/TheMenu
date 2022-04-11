@@ -1,9 +1,12 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function ResultPage () {
+  const { state } = useLocation();
+
   return (
     <>
-      <div>이건 결과 화면</div>
+      <div>{ state }</div>
     </>
   );
 }
