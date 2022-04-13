@@ -32,7 +32,7 @@ export default function QuestionPage () {
       }
     }
     query = query.slice(0, query.length - 1);
-    // axios({
+    // axios({ // 메뉴 데이터 만들어지면 테스트해볼 예정!
     //   method: 'GET',
     //   url: `http://localhost:4000/menu?${query}`
     // })

@@ -10,14 +10,18 @@ const options = {
       description:
         "직장인들의 영원한 숙제, 몇 가지 질문으로 드시고 싶은 메뉴를 골라보세요. 사용자의 위치에 기반해서 식당을 추천해드립니다.",
     },
-    securityDefinitions: {
-      security: { bearerAuth: [] },
-      bearerAuth: {
-        type: 'http',
-        name: 'token',
-        scheme: 'bearer',
-        in: 'header',
-      },
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "http",
+          scheme: "bearer",
+          in: "header",
+          bearerFormat: "JWT"
+        },
+      }
+    },
+    security: {
+      jwt: [] 
     },
     servers: [
       {
