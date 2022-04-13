@@ -68,7 +68,7 @@ router.post('/:user_Id', verifyToken, controller.post);
  *        description: menu_Id
  *      responses:
  *       "201":
- *        description: "메뉴 저장" 성공"
+ *        description: "메뉴 저장 성공"
  *       "400":
  *        description: "파라미터, 쿼리 값 입력 오류로 메뉴 저장 실패"
  *       "403":

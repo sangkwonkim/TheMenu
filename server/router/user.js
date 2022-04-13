@@ -68,7 +68,7 @@ router.post('/signup', controller.signup);
  *          properties:
  *           email:
  *            type: string
- *            description: "사용할" 아이디"
+ *            description: "사용할 아이디"
  *           password:
  *            type: string
  *            description: "사용할 비밀번호"
