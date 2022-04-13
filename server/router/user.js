@@ -8,7 +8,7 @@ router.post('/login', controller.login);
  * paths:
  *  /user/login:
  *    post:
- *      summary: "사용자 로그인"
+ *      summary: "회원 로그인"
  *      tags: [User]
  *      requestBody:
  *        description: 정확한 email과 password를 입력하면 로그인됩니다.
@@ -20,17 +20,17 @@ router.post('/login', controller.login);
  *              properties:
  *                email:
  *                  type: string
- *                  description: "사용자 고유 아이디"
+ *                  description: "회원 아이디"
  *                password:
  *                  type: string
- *                  description: "사용자 비밀번호"
+ *                  description: "회원 비밀번호"
  *      responses:
  *       "200":
  *        description: "로그인 성공"
  *       "400":
  *        description: "로그인 정보를 정확하게 입력하지 않음"
  *       "404":
- *        description: "회원가입한 사용자가 아님"
+ *        description: "회원가입한 회원이 아님으로 실패"
  *       "500":
  *        description: "서버 에러로 로그인 실패"
  */
@@ -40,13 +40,13 @@ router.post('/logout', controller.logout);
  * paths:
  *  /user/logout:
  *    post:
- *      summary: "사용자 로그아웃"
+ *      summary: "회원 로그아웃"
  *      tags: [User]
  *      responses:
  *       "200":
  *        description: "로그아웃 성공"
  *       "401":
- *        description: "로그인한 사용자가 아닙니다."
+ *        description: "로그인한 회원이 아님으로 실패."
  *       "500":
  *        description: "서버 에러로 로그아웃 실패"
  */
@@ -68,13 +68,13 @@ router.post('/signup', controller.signup);
  *          properties:
  *           email:
  *            type: string
- *            description: "사용자 아이디"
+ *            description: "사용할" 아이디"
  *           password:
  *            type: string
- *            description: "사용자 비밀번호"
+ *            description: "사용할 비밀번호"
  *           nick:
  *            type: string
- *            description: "사용자 닉네임"
+ *            description: "사용할 닉네임"
  *      responses:
  *       "201":
  *        description: "회원가입 성공"
@@ -95,14 +95,14 @@ router.delete('/:user_Id', verifyToken, controller.delete);
  *      - in: path
  *        name: user_Id
  *        schema:
- *          type: string
+ *          type: integer
  *        required: true
  *        description: user_Id
  *      responses:
  *       "200":
  *        description: "회원탈퇴 성공"
  *       "400":
- *        description: "파라미터 값 미입력으로 실패"
+ *        description: "파라미터 값 입력 오류로 실패"
  *       "403":
  *        description: "회원 본인이 아니므로 실패"
  *       "500":
@@ -120,14 +120,14 @@ router.get('/:user_Id', verifyToken, controller.get);
  *      - in: path
  *        name: user_Id
  *        schema:
- *          type: string
+ *          type: integer
  *        required: true
  *        description: user_Id
  *      responses:
  *       "200":
  *        description: "회원정보 조회 성공"
  *       "400":
- *        description: "파라미터 값 미입력으로 실패"
+ *        description: "파라미터 값 입력 오류로 실패"
  *       "403":
  *        description: "회원 본인이 아니므로 실패"
  *       "404":
@@ -147,14 +147,30 @@ router.patch('/:user_Id', verifyToken, controller.patch);
  *      - in: path
  *        name: user_Id
  *        schema:
- *          type: string
+ *          type: integer
  *        required: true
  *        description: user_Id
+ *      requestBody:
+ *        description: 변경할 nick과 password를 입력하면 회원정보가 수정됩니다.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                userInfo :
+ *                  type: object
+ *                  properties:
+ *                   nick:
+ *                     type: string
+ *                     description: "변경할 회원 닉네임"
+ *                   password:
+ *                     type: string
+ *                     description: "변경할 회원 비밀번호"
  *      responses:
  *       "200":
  *        description: "회원정보 수정 성공"
  *       "400":
- *        description: "파라미터 값 미입력으로 실패, 수정할 정보 미입력으로 실패"
+ *        description: "파라미터 값 입력 오류로 실패, 수정할 정보 미입력으로 실패"
  *       "403":
  *        description: "회원 본인이 아니므로 실패"
  *       "500":
