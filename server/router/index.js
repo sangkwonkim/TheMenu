@@ -19,6 +19,6 @@ router.use('/menu', menuRoute);
  *   description: 선택된 메뉴, 내 메뉴 보기, 내 메뉴 저장
  */
 
-// router.use('/callback', callbackRoute);
+router.use('/callback', callbackRoute);
 
 module.exports = router;

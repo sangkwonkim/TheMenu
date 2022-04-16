@@ -6,6 +6,10 @@ export default function LoginPage ({ userInfo, setUserInfo }) {
   const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
+  const REACT_APP_REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  const REACT_APP_REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_REST_API_KEY}&redirect_uri=${REACT_APP_REDIRECT_URI}&response_type=code`;
+
   const handleInputEmail = (e) => {
     setLoginInfo({
       email: e.target.value,
@@ -52,7 +56,7 @@ export default function LoginPage ({ userInfo, setUserInfo }) {
           로그인
         </button>
         <button>
-          카카오 로그인
+          <a href={KAKAO_AUTH_URL}>카카오 로그인</a>
         </button>
         <br />
         <button>
