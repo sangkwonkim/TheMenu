@@ -19,7 +19,7 @@ function App () {
         <Route path='/survey' element={<SurveyPage userInfo={userInfo} />} />
         <Route path='/login' element={<LoginPage setUserInfo={setUserInfo} />} />
         <Route path='/signup' element={<SignupPage />} />
-        <Route path='/myPage' element={<MyPage userInfo={userInfo} setUserInfo={setUserInfo} />} />
+        <Route path='/mypage' element={<MyPage userInfo={userInfo} setUserInfo={setUserInfo} />} />
         <Route path='/result' element={<ResultPage userInfo={userInfo} />} />
         <Route path='/map' element={<MapPage userInfo={userInfo} />} />
       </Routes>

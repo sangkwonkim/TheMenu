@@ -32,13 +32,14 @@ export default function QuestionPage () {
       }
     }
     query = query.slice(0, query.length - 1);
-    // axios({ // 메뉴 데이터 만들어지면 테스트해볼 예정!
-    //   method: 'GET',
-    //   url: `http://localhost:4000/menu?${query}`
-    // })
-    // .then((result) => {
-      navigate('/result', { state : query });
-    // })
+    axios({ // 메뉴 데이터 만들어지면 테스트해볼 예정!
+      method: 'GET',
+      url: `http://localhost:4000/menu?${query}`
+    })
+    .then((result) => {
+      // console.log(result.data.menus)
+      navigate('/result', { state : result.data.menus });
+    })
   }  
 
   if ( spicy === undefined ) {
@@ -55,5 +56,7 @@ export default function QuestionPage () {
   } 
   if ( type === undefined ) {
     return <Survey5 setType={setType} requestSurveyResult={requestSurveyResult} />
+  } else {
+    requestSurveyResult()
   }
 }

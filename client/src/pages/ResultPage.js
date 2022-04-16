@@ -6,7 +6,12 @@ export default function ResultPage () {
 
   return (
     <>
-      <div>{ state }</div>
+      {state.map((data) => {
+        return (
+          <div>
+            <div>{data.name}</div>
+          </div>
+      )})}
     </>
   );
 }

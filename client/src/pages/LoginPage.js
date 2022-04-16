@@ -33,7 +33,7 @@ export default function LoginPage ({ userInfo, setUserInfo }) {
         email : result.data.email,
         nickName : result.data.nick
       })
-      navigate('/question');
+      navigate('/survey');
     })
     .catch((error) => {
       console.log(error.message);
