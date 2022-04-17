@@ -8,6 +8,7 @@ import MyPage from './pages/MyPage';
 import SurveyPage from './pages/SurveyPage';
 import SignupPage from './pages/SignupPage';
 import ResultPage from './pages/ResultPage.js';
+import Kakao from './pages/kakao'
 
 function App () {
   const [userInfo, setUserInfo] = useState({email : '', nickName : ''})
@@ -17,6 +18,7 @@ function App () {
       <Routes>
         <Route path='/' element={<IntroPage />} />
         <Route path='/survey' element={<SurveyPage userInfo={userInfo} />} />
+        <Route path='/kakao' element={<Kakao userInfo={userInfo} />} />
         <Route path='/login' element={<LoginPage setUserInfo={setUserInfo} />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/mypage' element={<MyPage userInfo={userInfo} setUserInfo={setUserInfo} />} />
