@@ -9,6 +9,7 @@ import SurveyPage from './pages/SurveyPage';
 import SignupPage from './pages/SignupPage';
 import ResultPage from './pages/ResultPage.js';
 import Kakao from './pages/kakao'
+import Naver from './pages/naver';
 
 function App () {
   const [userInfo, setUserInfo] = useState({email : '', nickName : ''});
@@ -24,6 +25,7 @@ function App () {
           <Route path='/' element={<IntroPage />} />
           <Route path='/survey' element={<SurveyPage />} />
           <Route path='/kakao' element={<Kakao setUserInfo={setUserInfo} setIsLogin={setIsLogin} />} />
+          <Route path='/naver' element={<Naver setUserInfo={setUserInfo} setIsLogin={setIsLogin} />} />
           <Route path='/login' element={<LoginPage setUserInfo={setUserInfo} setIsLogin={setIsLogin} />} />
           <Route path='/signup' element={<SignupPage />} />
           <Route path='/mypage' element={<MyPage userInfo={userInfo} setUserInfo={setUserInfo} />} />

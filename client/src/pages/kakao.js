@@ -17,11 +17,11 @@ export default function KakaoRedirectHandler ({ setIsLogin, setUserInfo }) {
         method : 'POST',
         url : `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${REACT_APP_REST_API_KEY}&redirect_uri=${REACT_APP_REDIRECT_URI}&code=${code}`
       })
-      getUserInfo(token.data.access_token, token.data.refresh_token)
+      getUserInfo(token.data.access_token, token.data.refresh_token);
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
 
   const getUserInfo = async (access_token, refresh_token) => {
     // console.log(access_token, refresh_token);
@@ -33,22 +33,22 @@ export default function KakaoRedirectHandler ({ setIsLogin, setUserInfo }) {
           access_token : access_token,
           refresh_token : refresh_token
         }
-      })
+      });
       console.log(userInfo)
       setUserInfo({
         email : userInfo.data.userInfo.email,
         nickName : userInfo.data.userInfo.nick
-      })
+      });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
   
   useEffect(()=> {
     getToken();
     setIsLogin(true)
     navigate('/survey');
-  }, [])
+  }, []);
   
   return <></>;
 };
