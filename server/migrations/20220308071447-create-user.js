@@ -26,10 +26,6 @@ module.exports = {
         allowNull: false,
         defaultValue: 'local'
       },
-      snsId: {
-        type: Sequelize.STRING(30),
-        allowNull: true
-      },
       accessToken: {
         type: Sequelize.STRING(300),
         allowNull: true

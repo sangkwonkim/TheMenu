@@ -12,7 +12,7 @@ module.exports = {
         where: {
           email: email
         },
-        attributes: { exclude: ['snsId', 'social', 'accessToken', 'refreshToken', 'updatedAt', 'createdAt', 'deletedAt'] }
+        attributes: { exclude: ['social', 'accessToken', 'refreshToken', 'updatedAt', 'createdAt', 'deletedAt'] }
       });
       if (!findUser) return res.status(404).json({ message: '회원가입한 유저가 아닙니다.' });
       const same = bcrypt.compareSync(password, findUser.password);
@@ -33,7 +33,7 @@ module.exports = {
         // sameSite: 'strict',
         // httpOnly: true,
         // secure: true
-      }).status(200).json({ accessToken: accessToken, userInfo: { id: findUser.id, nick: findUser.nick } });
+      }).status(200).json({ accessToken: accessToken, userInfo: { id: findUser.id, email: findUser.email, nick: findUser.nick } });
     } catch {
       res.status(500).json({ message: '로그인에 실패했습니다.' });
     }

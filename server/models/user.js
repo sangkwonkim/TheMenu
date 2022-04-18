@@ -33,10 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'local'
     },
-    snsId: {
-      type: DataTypes.STRING(30),
-      allowNull: true
-    },
     accessToken: {
       type: DataTypes.STRING(300),
       allowNull: true

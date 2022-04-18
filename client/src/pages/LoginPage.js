@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export default function LoginPage ({ userInfo, setUserInfo }) {
+export default function LoginPage ({ setIsLogin, setUserInfo }) {
   const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
@@ -34,9 +34,10 @@ export default function LoginPage ({ userInfo, setUserInfo }) {
     .then((result) => {
       console.log(result.data);
       setUserInfo({
-        email : result.data.email,
-        nickName : result.data.nick
+        email : result.data.userInfo.email,
+        nickName : result.data.userInfo.nick
       })
+      setIsLogin(true)
       navigate('/survey');
     })
     .catch((error) => {
