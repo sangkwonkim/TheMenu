@@ -19,7 +19,7 @@ export default function KakaoRedirectHandler ({ setIsLogin, setUserInfo }) {
       })
       getUserInfo(token.data.access_token, token.data.refresh_token);
     } catch (e) {
-      console.log(e);
+      alert('재시도 부탁드립니다.')
     }
   };
 
@@ -34,13 +34,14 @@ export default function KakaoRedirectHandler ({ setIsLogin, setUserInfo }) {
           refresh_token : refresh_token
         }
       });
-      console.log(userInfo)
       setUserInfo({
         email : userInfo.data.userInfo.email,
         nickName : userInfo.data.userInfo.nick
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      if(error.message === 'Request failed with status code 400') alert ('동일한 이메일로 로컬 회원가입이 되어있습니다.');
+      else alert('재시도 부탁드립니다.')
+      navigate('/login');
     }
   };
   

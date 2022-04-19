@@ -7,32 +7,32 @@ import axios from 'axios';
 export default function NaverRedirectHandler ({ setIsLogin, setUserInfo }) {
   const navigate = useNavigate();
 
-  const REACT_APP_NAVER_CLIEN_ID = process.env.REACT_APP_NAVER_CLIEN_ID;
-  const REACT_APP_NAVER_CLIEN_SECRET = process.env.REACT_APP_NAVER_CLIEN_SECRET;
-  const REACT_APP_NAVER_STATE = process.env.REACT_APP_NAVER_STATE;
-
-  
-  const getUserInfo = async () => {  
+  const getUserInfo = () => {  
     let code = new URL(document.location.toString()).searchParams.get("code");
-    try {
-      // console.log('이게 네이버 코드', code)
-      const userInfo = await axios({
+    axios({
         method : 'POST',
         url : 'http://localhost:4000/callback/naver',
         data : {
           code : code
         }
-      })
-      console.log(userInfo.data)
-    } catch (e) {
-      console.log(e);
-    }
+    })
+    .then((result) => {
+      setUserInfo({
+        email : result.data.userInfo.email,
+        nickName : result.data.userInfo.nick
+      });
+      setIsLogin(true)
+      navigate('/survey');
+    })
+    .catch((error) => {
+      if(error.message === 'Request failed with status code 400') alert ('동일한 이메일로 로컬 회원가입이 되어있습니다.');
+      else alert('재시도 부탁드립니다.')
+      navigate('/login');
+    })
   };
   
   useEffect(()=> {
     getUserInfo();
-    // setIsLogin(true)
-    // navigate('/survey');
   }, []);
   
   return <></>;
