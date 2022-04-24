@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-export default function NaverRedirectHandler ({ setIsLogin, setUserInfo }) {
+export default function Naver ({ setIsLogin, setUserInfo }) {
   const navigate = useNavigate();
 
   const getUserInfo = () => {  

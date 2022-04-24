@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-
 import axios from 'axios';
 
-
-export default function KakaoRedirectHandler ({ setIsLogin, setUserInfo }) {
+export default function Kakao ({ setIsLogin, setUserInfo }) {
   const navigate = useNavigate();
   const REACT_APP_REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
   const REACT_APP_REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
 
-  
   const getToken = async () => {  
     let code = new URL(document.location.toString()).searchParams.get("code");
     try {

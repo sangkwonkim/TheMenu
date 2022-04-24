@@ -1,9 +1,28 @@
-import React from 'react';
+/* global kakao */
+import React, { useEffect } from "react";
 
-export default function MapPage () {
+const { kakao } = window;
+
+const Map = () => {
+  useEffect(() => {
+    let container = document.getElementById("map");
+
+    let options = {
+      center: new kakao.maps.LatLng(35.85133, 127.734086),
+      level: 13,
+    };
+
+    let map = new kakao.maps.Map(container, options);
+
+    console.log("loading kakaomap");
+  }, []);
+
   return (
-    <>
-      <div>이건 지도 화면</div>
-    </>
+    <div>
+      <div id="map" style={{width:'500px', height:'400px'}}>
+      </div>
+    </div>
   );
-}
+};
+
+export default Map;

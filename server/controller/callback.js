@@ -65,7 +65,7 @@ module.exports = {
         res.status(400).json({ message: '동일한 이메일로 회원 가입한 유저가 있습니다.' });
       } else {
         res.status(500).json({ message: '소셜로그인에 실패했습니다.' });
-      }
+      }asdfhnba
     }
   },
   naver: async (req, res) => {
@@ -93,9 +93,7 @@ module.exports = {
           social: 'naver'
         }
       });
-      // console.log(findUser)
       if (!findUser) {
-        // console.log('null이면 이게 되야 되는데?')
         const newUser = await UserModel.create({
           email: userEmail,
           nick: userNick,
@@ -120,7 +118,6 @@ module.exports = {
           // secure: true
         }).status(200).json({ accessToken: accessToken, userInfo: { id: newUser[0].User.dataValues.id, email: newUser[0].User.dataValues.email, nick: newUser[0].User.dataValues.nick } });
       } else {
-        // console.log('이게 되고 있는 구야?')
         const accessToken = jwt.sign({ email: findUser.email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
         const refreshToken = jwt.sign({ nick: findUser.nick, email: findUser.email }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
         const updateUser = await UserModel.update(
