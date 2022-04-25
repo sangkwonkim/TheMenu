@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const MenuContainer = styled.div`
+export const MenuContainer = styled.button`
 background-color: whitesmoke;
 border: 1px solid ${props => props.theme.main};
 `;

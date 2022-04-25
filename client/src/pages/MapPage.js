@@ -1,4 +1,3 @@
-/* global kakao */
 import React, { useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
@@ -8,10 +7,9 @@ export default function MapPage () {
   const { state } = useLocation();
   
   useEffect(() => {
-    console.log(state)
     const container = document.getElementById("map");
     const options = {
-      center: new kakao.maps.LatLng(35.85133, 126.570667),
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
       level: 5,
     };
     const map = new kakao.maps.Map(container, options);
@@ -35,10 +33,9 @@ export default function MapPage () {
           map: map, 
           position: locPosition
       }); 
-      const iwContent = message, // 인포윈도우에 표시할 내용
+      const iwContent = message,
           iwRemoveable = true;
   
-      // 인포윈도우를 생성합니다
       const infowindow = new kakao.maps.InfoWindow({
           content : iwContent,
           removable : iwRemoveable
