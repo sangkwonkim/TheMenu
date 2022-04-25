@@ -6,12 +6,34 @@ const { kakao } = window;
 const Map = () => {
   useEffect(() => {
     let container = document.getElementById("map");
-
+    
     let options = {
-      center: new kakao.maps.LatLng(35.85133, 127.734086),
-      level: 9,
+      center: new kakao.maps.LatLng(35.85133, 126.570667),
+      level: 5,
     };
 
+    // 장소 검색 객체를 생성합니다
+  var ps = new kakao.maps.services.Places(); 
+
+  var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+
+
+function displayKeywordPlace(place) {
+    
+  // 마커를 생성하고 지도에 표시합니다
+  var marker = new kakao.maps.Marker({
+      map: map,
+      position: new kakao.maps.LatLng(place.y, place.x) 
+  });
+
+  // 마커에 클릭이벤트를 등록합니다
+  kakao.maps.event.addListener(marker, 'click', function() {
+      // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+      infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+      infowindow.open(map, marker);
+  });
+}
+    
     let map = new kakao.maps.Map(container, options);
 
     function displayMarker(locPosition, message) {
@@ -40,22 +62,32 @@ const Map = () => {
 
     navigator.geolocation.getCurrentPosition(function(position) {
         
-      var lat = position.coords.latitude, // 위도
-          lon = position.coords.longitude; // 경도
+      var lat = position.coords.latitude,
+          lon = position.coords.longitude;
       
-      var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-          message = '<div style="padding:5px;">여기에 계신가요?!</div>'; // 인포윈도우에 표시될 내용입니다
+      var locPosition = new kakao.maps.LatLng(lat, lon), 
+          message = '<div style="padding:5px;">내 위치</div>';
+
+      ps.keywordSearch('김치찌개', placesSearchCB, {location: new kakao.maps.LatLng(lat,lon)}); 
+
+      function placesSearchCB (data) {
+
+        var bounds = new kakao.maps.LatLngBounds();
+
+        for (var i=0; i<data.length; i++) {
+            displayKeywordPlace(data[i]);    
+            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+        }       
+}
       
-      // 마커와 인포윈도우를 표시합니다
       displayMarker(locPosition, message);
-          
     });
     
   }, []);
 
   return (
     <div>
-      <div id="map" style={{width:'500px', height:'400px'}}>
+      <div id="map" style={{width:'600px', height:'600px'}}>
       </div>
     </div>
   );
