@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const MenuContainer = styled.div`
@@ -9,18 +9,22 @@ border: 1px solid ${props => props.theme.main};
 
 export default function ResultPage () {
   const { state } = useLocation();
+  const navigate = useNavigate();
+
+  const handleClickResult = (e) => {
+    navigate('/map', { state : e.target.textContent })
+  }
 
   return (
-    <>
+    <div>
       {state.map((data) => {
         return (
           <div>
-            <MenuContainer>
+            <MenuContainer onClick ={handleClickResult}>
               {data.name}
             </MenuContainer>
-            <br />
           </div>
       )})}
-    </>
+    </div>
   );
 }

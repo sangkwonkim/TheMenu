@@ -30,7 +30,7 @@ function App () {
           <Route path='/signup' element={<SignupPage />} />
           <Route path='/mypage' element={<MyPage userInfo={userInfo} setUserInfo={setUserInfo} />} />
           <Route path='/result' element={<ResultPage userInfo={userInfo} />} />
-          <Route path='/map' element={<MapPage userInfo={userInfo} />} />
+          <Route path='/map' element={<MapPage />} />
         </Routes>
       </ PageContainer>
     </WholeContainer>

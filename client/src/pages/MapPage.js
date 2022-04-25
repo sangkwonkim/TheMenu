@@ -1,10 +1,14 @@
 /* global kakao */
 import React, { useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 
 const { kakao } = window;
 
-const Map = () => {
+export default function MapPage () {
+  const { state } = useLocation();
+  
   useEffect(() => {
+    console.log(state)
     const container = document.getElementById("map");
     const options = {
       center: new kakao.maps.LatLng(35.85133, 126.570667),
@@ -25,7 +29,6 @@ const Map = () => {
         infowindow.open(map, marker);
       });
     }
-    
     
     function displayMarker(locPosition, message) {
       const marker = new kakao.maps.Marker({  
@@ -52,7 +55,7 @@ const Map = () => {
       const locPosition = new kakao.maps.LatLng(lat, lon), 
         message = '<div style="padding:5px;">Your Location</div>';
 
-      ps.keywordSearch('국밥', placesSearchCB, {location: new kakao.maps.LatLng(lat,lon)}); 
+      ps.keywordSearch(`${state}`, placesSearchCB, {location: new kakao.maps.LatLng(lat,lon)}); 
 
       function placesSearchCB (data) {
         const bounds = new kakao.maps.LatLngBounds();
@@ -66,7 +69,7 @@ const Map = () => {
       displayMarker(locPosition, message);
     });
     
-  }, []);
+  }, [state]);
 
   return (
     <div>
@@ -75,5 +78,3 @@ const Map = () => {
     </div>
   );
 };
-
-export default Map;
