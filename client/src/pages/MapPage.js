@@ -23,7 +23,7 @@ export default function MapPage () {
           position: new kakao.maps.LatLng(place.y, place.x) 
       });
       kakao.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+        infowindow.setContent(`<div style="padding:5px;font-size:12px;" ><a href=https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=${place.place_name}>${place.place_name}</a></div>`);
         infowindow.open(map, marker);
       });
     }
