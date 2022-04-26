@@ -4,10 +4,14 @@ export const WholeContainer = styled.div`
   margin-top: 5%;
   height: 800px;
   width: 1300px;
-  background: #2cc05a;
   display: flex;
   flex-direction: column;
-  /* border: 1px solid black; */
+
+  @media screen and (max-width: 500px) {
+    margin-top: 0%;
+    height: 100%;
+    width: 500px;
+  }
 `;
 
 export const UserInfoContainer = styled.div`
@@ -18,7 +22,11 @@ export const UserInfoContainer = styled.div`
   align-items: center;
   flex-direction: center;
   justify-content: center;
-  /* border: 1px solid black; */
+
+  @media screen and (max-width: 500px) {
+    height: 100%;
+    width: 100%;
+  }
 `;
 
 export const PageContainer = styled.div`
@@ -29,5 +37,10 @@ export const PageContainer = styled.div`
   align-items: center;
   flex-direction: center;
   justify-content: center;
-  /* border: 1px solid black; */
+
+  @media screen and (max-width: 500px) {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 10px;
+  }
 `;
