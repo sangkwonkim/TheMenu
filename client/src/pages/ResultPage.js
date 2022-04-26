@@ -17,10 +17,10 @@ export default function ResultPage () {
 
   return (
     <div>
-      {state.map((data) => {
+      {state.map((data, id) => {
         return (
           <div>
-            <MenuContainer onClick ={handleClickResult}>
+            <MenuContainer key={id} onClick ={handleClickResult}>
               {data.name}
             </MenuContainer>
           </div>
