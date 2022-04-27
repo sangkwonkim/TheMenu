@@ -17,7 +17,7 @@ export default function MapPage () {
     const ps = new kakao.maps.services.Places(); 
     
     function displayKeywordMarker(place) {
-      const infowindow = new kakao.maps.InfoWindow({zIndex:1});
+      const infowindow = new kakao.maps.InfoWindow({ removable : true });
       const marker = new kakao.maps.Marker({
           map: map,
           position: new kakao.maps.LatLng(place.y, place.x) 
@@ -31,10 +31,17 @@ export default function MapPage () {
       });
     }
     
+    
     function displayMarker(locPosition, message) {
+      const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+      const imageSize = new kakao.maps.Size(24, 35); 
+      
+      const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
       const marker = new kakao.maps.Marker({  
           map: map, 
-          position: locPosition
+          position: locPosition,
+          image: markerImage
       }); 
       const iwContent = message,
           iwRemoveable = true;
@@ -45,6 +52,9 @@ export default function MapPage () {
       });
       
       infowindow.open(map, marker);
+      setTimeout(() => {
+        infowindow.close();
+      }, 3000)
       map.setCenter(locPosition);      
     }    
 
