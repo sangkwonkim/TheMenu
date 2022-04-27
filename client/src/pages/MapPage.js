@@ -25,6 +25,9 @@ export default function MapPage () {
       kakao.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent(`<div style="padding:5px;font-size:12px;" ><a href=https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=${place.road_address_name.split(' ')[1]}+${place.place_name}>${place.place_name}</a></div>`);
         infowindow.open(map, marker);
+        setTimeout(() => {
+          infowindow.close();
+        }, 3000)
       });
     }
     
