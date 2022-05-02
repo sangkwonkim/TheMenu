@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       allowNull: false
     },
-    style: { // 한식, 일식, 중식, 양식, 기타(분식 등)
+    style: { // 한식, 일식, 중식, 양식, 아시안, 기타(분식 등)
       type: DataTypes.STRING(10),
       allowNull: false
     },
