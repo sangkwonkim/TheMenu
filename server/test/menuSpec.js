@@ -2,89 +2,112 @@ const app = require('../app');
 const request = require('supertest');
 const models = require('../models');
 const should = require('should');
-const { User: UserModel, AteMenu: AteMenuModel, Menu: MenuModel } = require('../models');
+const {
+  User: UserModel,
+  AteMenu: AteMenuModel,
+  Menu: MenuModel
+} = require('../models');
 const jwt = require('jsonwebtoken');
 
-const menuList = [{
-  name: '김치찌개',
-  spicy: true,
-  meat: true,
-  soup: true,
-  style: 'korean',
-  type: 'rice'
-}, {
-  name: '된장찌개',
-  spicy: false,
-  meat: false,
-  soup: true,
-  style: 'korean',
-  type: 'rice'
-}, {
-  name: '초밥',
-  spicy: false,
-  meat: false,
-  soup: false,
-  style: 'japanese',
-  type: 'rice'
-}, {
-  name: '짜장면',
-  spicy: false,
-  meat: false,
-  soup: false,
-  style: 'chinese',
-  type: 'noodle'
-}, {
-  name: '짬뽕',
-  spicy: true,
-  meat: false,
-  soup: true,
-  style: 'chinese',
-  type: 'noodle'
-}];
+const menuList = [
+  {
+    name: '김치찌개',
+    spicy: true,
+    meat: true,
+    soup: true,
+    style: 'korean',
+    type: 'rice'
+  },
+  {
+    name: '된장찌개',
+    spicy: false,
+    meat: false,
+    soup: true,
+    style: 'korean',
+    type: 'rice'
+  },
+  {
+    name: '초밥',
+    spicy: false,
+    meat: false,
+    soup: false,
+    style: 'japanese',
+    type: 'rice'
+  },
+  {
+    name: '짜장면',
+    spicy: false,
+    meat: false,
+    soup: false,
+    style: 'chinese',
+    type: 'noodle'
+  },
+  {
+    name: '짬뽕',
+    spicy: true,
+    meat: false,
+    soup: true,
+    style: 'chinese',
+    type: 'noodle'
+  }
+];
 
-const userMenu = [{
-  user: 1,
-  menu: 1,
-  createdAt: new Date()
-}, {
-  user: 1,
-  menu: 3,
-  createdAt: new Date()
-}, {
-  user: 1,
-  menu: 5,
-  createdAt: new Date()
-}, {
-  user: 2,
-  menu: 2,
-  createdAt: new Date()
-}, {
-  user: 2,
-  menu: 4,
-  createdAt: new Date()
-}];
+const userMenu = [
+  {
+    user: 1,
+    menu: 1,
+    createdAt: new Date()
+  },
+  {
+    user: 1,
+    menu: 3,
+    createdAt: new Date()
+  },
+  {
+    user: 1,
+    menu: 5,
+    createdAt: new Date()
+  },
+  {
+    user: 2,
+    menu: 2,
+    createdAt: new Date()
+  },
+  {
+    user: 2,
+    menu: 4,
+    createdAt: new Date()
+  }
+];
 
 const email = 'sangkwon2406@naver.com';
 const email2 = 'test@naver.com';
-const accessToken = jwt.sign({ email: email }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-const accessToken2 = jwt.sign({ email: email2 }, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-const signupInfo = [{
-  email: email,
-  password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
-  nick: 'sangkwon',
-  social: 'local',
-  createdAt: new Date(),
-  updatedAt: new Date()
-}, {
-  email: 'test@naver.com',
-  password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
-  nick: 'test',
-  social: 'local',
-  accessToken: null,
-  refreshToken: null,
-  createdAt: new Date(),
-  updatedAt: new Date()
-}];
+const accessToken = jwt.sign({ email: email }, process.env.ACCESS_SECRET, {
+  expiresIn: '1h'
+});
+const accessToken2 = jwt.sign({ email: email2 }, process.env.ACCESS_SECRET, {
+  expiresIn: '1h'
+});
+const signupInfo = [
+  {
+    email: email,
+    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+    nick: 'sangkwon',
+    social: 'local',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    email: 'test@naver.com',
+    password: '$2b$10$RJq0gXxBHhLsRhMtI8U3p./kk.KPvdohoMx179N3HvbUaDpPbMi1.',
+    nick: 'test',
+    social: 'local',
+    accessToken: null,
+    refreshToken: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+];
 
 describe('GET /menu', () => {
   before(() => models.sequelize.sync({ force: true }));
@@ -150,7 +173,10 @@ describe('GET /menu', () => {
         .get('/menu?spicy=one')
         .end((err, res) => {
           res.status.should.equal(400);
-          res.body.should.have.property('message', 'spicy 요청이 잘 못 되었습니다.');
+          res.body.should.have.property(
+            'message',
+            'spicy 요청이 잘 못 되었습니다.'
+          );
           done();
         });
     });
@@ -159,7 +185,10 @@ describe('GET /menu', () => {
         .get('/menu?meat=two')
         .end((err, res) => {
           res.status.should.equal(400);
-          res.body.should.have.property('message', 'meat 요청이 잘 못 되었습니다.');
+          res.body.should.have.property(
+            'message',
+            'meat 요청이 잘 못 되었습니다.'
+          );
           done();
         });
     });
@@ -168,7 +197,10 @@ describe('GET /menu', () => {
         .get('/menu?soup=three')
         .end((err, res) => {
           res.status.should.equal(400);
-          res.body.should.have.property('message', 'soup 요청이 잘 못 되었습니다.');
+          res.body.should.have.property(
+            'message',
+            'soup 요청이 잘 못 되었습니다.'
+          );
           done();
         });
     });
@@ -177,7 +209,10 @@ describe('GET /menu', () => {
         .get('/menu?style=italian')
         .end((err, res) => {
           res.status.should.equal(400);
-          res.body.should.have.property('message', 'style 요청이 잘 못 되었습니다.');
+          res.body.should.have.property(
+            'message',
+            'style 요청이 잘 못 되었습니다.'
+          );
 
           done();
         });
@@ -187,7 +222,10 @@ describe('GET /menu', () => {
         .get('/menu?type=juice')
         .end((err, res) => {
           res.status.should.equal(400);
-          res.body.should.have.property('message', 'type 요청이 잘 못 되었습니다.');
+          res.body.should.have.property(
+            'message',
+            'type 요청이 잘 못 되었습니다.'
+          );
           done();
         });
     });
@@ -196,7 +234,10 @@ describe('GET /menu', () => {
         .get('/menu?spicy=1&meat=1&soup=1&style=japanese&type=bread')
         .end((err, res) => {
           res.status.should.equal(404);
-          res.body.should.have.property('message', '조건에 충족하는 메뉴가 존재하지 않습니다.');
+          res.body.should.have.property(
+            'message',
+            '조건에 충족하는 메뉴가 존재하지 않습니다.'
+          );
           done();
         });
     });
@@ -255,7 +296,10 @@ describe('POST /menu/:user_Id', () => {
         .set('authorization', `Bearer ${accessToken}`)
         .end((err, res) => {
           res.status.should.equal(403);
-          res.body.should.have.property('message', '본인만 메뉴를 저장할 수 있습니다.');
+          res.body.should.have.property(
+            'message',
+            '본인만 메뉴를 저장할 수 있습니다.'
+          );
           done();
         });
     });
@@ -320,7 +364,10 @@ describe('GET /menu/:user_Id', () => {
         .set('authorization', `Bearer ${accessToken2}`)
         .end((err, res) => {
           res.status.should.equal(403);
-          res.body.should.have.property('message', '본인만 메뉴를 확인할 수 있습니다.');
+          res.body.should.have.property(
+            'message',
+            '본인만 메뉴를 확인할 수 있습니다.'
+          );
           done();
         });
     });
